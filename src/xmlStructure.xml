@@ -1,0 +1,36 @@
+<navigation>
+    <category name="Reports">
+        <item name="Mahm">
+            <component type="text">
+
+            </component>
+            <component type="table">
+                <data link="http://localhost:8011/proxy/workflow/2/task/1/node/out/payload/gzip" />
+                <columns>
+                    <columnName name="user_avg" />
+                    <columnName name="categories" />
+                </columns>
+            </component>
+            <component type="chart">
+
+            </component>
+            <component type="text">
+            </component>
+        </item>
+        <item name="ReportTest">
+
+        </item>
+        <item name="trial">
+
+        </item>
+        <item name="wealth">
+
+        </item>
+
+    </category>
+    <category name="Charts">
+        <item name="wealthMangamentChart">
+
+        </item>
+    </category>
+</navigation>
