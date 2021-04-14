@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Typography, makeStyles } from "@material-ui/core";
 import ReportTable from "./ReportTable";
+import ReportText from "./ReportText";
+import ReportChart from "./ReportChart";
 
 const useStyles = makeStyles({
   report_content: {
@@ -16,11 +18,29 @@ const useStyles = makeStyles({
   },
 });
 
-const ReportTemplateContent = ({xmlResult}) => {
+const ReportTemplateContent = (props) => {
+  const [componentToLoad, setComponentToLoad] = useState(undefined);
+  const { xmlResult } = props;
+  const { reportId } = props;
+
   const classes = useStyles();
+  var componentType = {
+    table: <ReportTable key={reportId} xmlResult={xmlResult} />,
+    text: (
+      <ReportText key={reportId} reportId={reportId} xmlResult={xmlResult} />
+    ),
+    chart: <ReportChart key={reportId} reportId={reportId} xmlResult={xmlResult} />,
+  };
+
+  useEffect(() => {
+    setComponentToLoad(componentType[xmlResult[0][0].$.type]);
+  }, []);
+
   return (
-    <div className={classes.report_content}>
-      <ReportTable xmlResult={xmlResult}/>
+    xmlResult !== undefined &&
+    componentToLoad !== undefined && 
+    <div className={classes.report_content} >
+    {componentToLoad}
     </div>
   );
 };
