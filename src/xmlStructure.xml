@@ -1,35 +1,42 @@
 <navigation>
     <category name="Reports">
-        <item name="Mahm">
+        <item name="textTEST">
             <component type="text">
 
             </component>
+        </item>
+        <item name="LONGTEXT">
+            <component type="text">
+
+            </component>
+        </item>
+        <item name="ReportTest">
             <component type="table">
                 <data link="http://localhost:8011/proxy/workflow/2/task/1/node/out/payload/gzip" />
                 <columns>
                     <columnName name="user_avg" />
-                    <columnName name="categories" />
+                    <columnName name="index" />
                 </columns>
             </component>
+        </item>
+        <item name="wealth">
+            <component type="table">
+                <data link="http://localhost:8011/proxy/workflow/2/task/1/node/out/payload/gzip" />
+                <columns>
+                    <columnName name="user_avg" />
+                    <columnName name="index" />
+                </columns>
+            </component>
+        </item>
+        <item name="paragraphs">
+
+        </item>
+        <item name="chartReport">
             <component type="chart">
 
             </component>
-            <component type="text">
-            </component>
         </item>
-        <item name="ReportTest">
-
-        </item>
-        <item name="trial">
-
-        </item>
-        <item name="wealth">
-
-        </item>
-
-    </category>
-    <category name="Charts">
-        <item name="wealthMangamentChart">
+        <item name="Capture">
 
         </item>
     </category>

@@ -1,83 +1,78 @@
-import React, { useEffect, useState } from "react";
 import {
-  Typography,
-  makeStyles,
-  TableContainer,
   Table,
-  TableHead,
-  TableRow,
-  TableCell,
   TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
   TablePagination,
-} from "@material-ui/core";
-import axios from "axios";
-var base = require("base-64");
+  TableRow
+} from '@material-ui/core'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+var base = require('base-64')
 
-var parseString = require("xml2js").parseString;
-var tok = "gui_client:kFjfAh68k$$ADUjPr?vPA";
-var hash = base.encode(tok);
-var Basic = "Basic " + hash;
-var colNames = [];
-var reportTableData = [];
+var tok = 'gui_client:kFjfAh68k$$ADUjPr?vPA'
+var hash = base.encode(tok)
+var Basic = 'Basic ' + hash
 
-const setColumnNames = (columns) => {
-  columns !== undefined &&
-    columns.forEach((element) => {
-      var name = element.$.name;
-      if (!colNames.includes(name)) colNames.push(name);
-    });
-};
-const setReportTableData = (tabledata) => {
-  var allDataArray = [];
-  Object.keys(tabledata.data).map((key) => {
-    var item = tabledata.data[key];
-    allDataArray.push(item);
-  });
-  allDataArray.map((item) => {
-    const trial = Object.keys(item)
-      .filter((key) => colNames.includes(key))
-      .reduce((obj, y) => {
-        obj[y] = item[y];
-        return obj;
-      }, {});
+const ReportTable = props => {
+  const { xmlResult } = props
+  const [columns, setColumns] = useState(undefined)
+  const [tableData, setTableData] = useState(undefined)
+  const [rowsPerPage, setrowsPerPage] = useState(10)
+  const [page, setpage] = useState(0)
 
-    reportTableData.push(trial);
-  });
-};
+  var colNames = []
+  var reportTableData = []
 
-const ReportTable = ({ xmlResult }) => {
-  const [columns, setColumns] = useState();
-  const [tableData, setTableData] = useState();
-  const [rowsPerPage, setrowsPerPage] = useState(10);
+  const setColumnNames = columns => {
+    columns !== undefined &&
+      columns.forEach(element => {
+        var name = element.$.name
+        if (!colNames.includes(name)) colNames.push(name)
+      })
+  }
+  const setReportTableData = tabledata => {
+    var allDataArray = []
+    Object.keys(tabledata.data).map(key => {
+      var item = tabledata.data[key]
+      allDataArray.push(item)
+    })
+    allDataArray.map(item => {
+      const trial = Object.keys(item)
+        .filter(key => colNames.includes(key))
+        .reduce((obj, y) => {
+          obj[y] = item[y]
+          return obj
+        }, {})
 
-  const [page, setpage] = useState(0);
+      reportTableData.push(trial)
+    })
+  }
   const changeRowsPerPage = (event, newRows) => {
-    setrowsPerPage(event.target.value);
-    setpage(0);
-  };
+    setrowsPerPage(event.target.value)
+    setpage(0)
+  }
 
   const handleChangePage = (event, newPage) => {
-    setpage(newPage);
-  };
+    setpage(newPage)
+  }
 
   useEffect(async () => {
-    setColumns(xmlResult.category.elements[0].element[0].columns[0].columnName);
-    const tableDataResponse = await axios.get(
-      xmlResult.category.elements[0].element[0].data[0].$.link,
-      {
-        headers: {
-          Authorization: Basic,
-        },
+    setColumns(xmlResult[0][0].columns[0].columnName)
+    const tableDataResponse = await axios.get(xmlResult[0][0].data[0].$.link, {
+      headers: {
+        Authorization: Basic
       }
-    );
+    })
 
-    setTableData(JSON.parse(tableDataResponse.data.response.payload));
-  }, []);
+    setTableData(JSON.parse(tableDataResponse.data.response.payload))
+  }, [])
 
-  columns !== undefined && setColumnNames(columns);
+  columns !== undefined && setColumnNames(columns)
   tableData !== undefined &&
     reportTableData.length === 0 &&
-    setReportTableData(tableData);
+    setReportTableData(tableData)
 
   return (
     columns !== undefined &&
@@ -86,28 +81,28 @@ const ReportTable = ({ xmlResult }) => {
         <Table>
           <TableHead>
             <TableRow>
-              {Object.keys(reportTableData[0]).map((colName) => (
-                <TableCell align="left">{colName}</TableCell>
+              {Object.keys(reportTableData[0]).map(colName => (
+                <TableCell align='left'>{colName}</TableCell>
               ))}
             </TableRow>
           </TableHead>
           <TableBody>
             {reportTableData
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((oneRow) => {
+              .map(oneRow => {
                 return (
                   <TableRow key={oneRow.user_avg}>
-                    {Object.keys(oneRow).map((key) => {
-                      return <TableCell align="left">{oneRow[key]}</TableCell>;
+                    {Object.keys(oneRow).map(key => {
+                      return <TableCell align='left'>{oneRow[key]}</TableCell>
                     })}
                   </TableRow>
-                );
+                )
               })}
           </TableBody>
         </Table>
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
-          component="div"
+          component='div'
           count={reportTableData.length}
           page={page}
           rowsPerPage={rowsPerPage}
@@ -116,7 +111,7 @@ const ReportTable = ({ xmlResult }) => {
         />
       </TableContainer>
     )
-  );
-};
+  )
+}
 
-export default ReportTable;
+export default ReportTable

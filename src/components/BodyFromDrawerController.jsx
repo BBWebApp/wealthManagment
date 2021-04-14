@@ -1,41 +1,27 @@
-import Report from "@bit/bbconsult.standalone-components.report";
+// import Report from '@bit/bbconsult.standalone-components.wm-components.report'
+import Report from "../tempComponents/Report";
 import React, { useEffect, useState } from "react";
-
-import ReportTemplatePage from "@bit/bbconsult.standalone-components.report-template-page";
-import axios from "axios";
-
-var base = require("base-64");
-
-var parseString = require("xml2js").parseString;
-var tok = "gui_client:kFjfAh68k$$ADUjPr?vPA";
-var hash = base.encode(tok);
-var Basic = "Basic " + hash;
+// import ReportTemplatePage from '@bit/bbconsult.standalone-components.report-template-page'
+import ReportTemplatePage from "../tempComponents/ReportTemplatePage";
 
 const BodyFromDrawerController = (props) => {
   const { reportId } = props;
+  const { content } = props;
   const [xmlResult, setxmlResult] = useState(undefined);
 
   useEffect(async () => {
-    if (reportId === "wealth") {
-      const [firstResponse] = await Promise.all([
-        axios.get("http://localhost:8011/proxy/workflow/3/task/1/upload", {
-          headers: {
-            Authorization: Basic,
-          },
-        }),
-      ]);
-      parseString(firstResponse.data, function (err, result) {
-        setxmlResult(result);
-      });
-    }
+    content[reportId] !== undefined && setxmlResult(content[reportId]);
   }, []);
 
-  const reportContent =
-    reportId === "wealth" ? (
-      xmlResult !== undefined && <ReportTemplatePage xmlResult={xmlResult} />
-    ) : (
-      <Report key={reportId} reportId={reportId} />
+  var reportContent;
+  if (content[reportId] !== undefined && xmlResult !== undefined) {
+    reportContent = (
+      <ReportTemplatePage reportId={reportId} xmlResult={xmlResult} />
     );
+  } else {
+    reportContent = <Report key={reportId} reportId={reportId} />;
+  }
+
   return reportContent;
 };
 

@@ -1,14 +1,23 @@
-<report>
-    <elements>
-        <element>
-            <type type="table" />
-            <header header="" />
-            <data link="http://localhost:8011/proxy/workflow/2/task/1/node/out/payload/gzip" />
-            <columns>
-                <columnName name="user_avg" />
-                <columnName name="categories" />
-            </columns>
-        </element>
-    </elements>
+if (image !== null) {
+    const index = 6 - dashBoardArray.length;
+    if (index > 0) {
+      var imageObj = {};
+      imageObj[index] = image;
 
-</report>
+      image && dashBoardArray.push(imageObj);
+    } else {
+      var imageObj = { 1: image };
+      dashBoardArray.pop();
+      Object.keys(dashBoardArray).map((key) => {
+        Object.defineProperty(
+          dashBoardArray,
+          key + 1,
+          Object.getOwnPropertyDescriptor(dashBoardArray, key)
+        );
+        delete dashBoardArray[key];
+      });
+      image && dashBoardArray.push(imageObj);
+    }
+  }
+  dashBoardArray.sort((a, b) => a.distance - b.distance);
+  console.log(dashBoardArray);
