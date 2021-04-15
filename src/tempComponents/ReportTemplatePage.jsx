@@ -5,13 +5,15 @@ import ReportTemplateFooter from "./ReportTemplateFooter";
 import ReportTemplateHeader from "./ReportTemplateHeader";
 import { useScreenshot } from "use-react-screenshot";
 import { createRef, useEffect, useState } from "react";
-import uploadReportScreenshot from "./uploadReportScreenshot";
+import { useSelector, useDispatch } from "react-redux";
+import { uploadImage } from "../redux/ducks/uploadImage";
 
 const useStyles = makeStyles({});
 
 const ReportTemplatePage = (props) => {
   const { xmlResult } = props;
   const { reportId } = props;
+  const dispatch = useDispatch();
 
   const classes = useStyles();
 
@@ -22,13 +24,13 @@ const ReportTemplatePage = (props) => {
   const getImage = () => {
     setTimeout(() => {
       takeScreenShot(ref.current);
-    }, 350);
+    }, 300);
   };
 
   useEffect(async () => {
     getImage();
   }, []);
-  image && uploadReportScreenshot(image, reportId);
+  image && dispatch(uploadImage(image, reportId));
 
   return (
     <div>
