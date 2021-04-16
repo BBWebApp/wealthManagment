@@ -57,9 +57,6 @@ const AppStructureController = () => {
         },
       }),
     ]);
-    console.log("hereWe");
-    console.log(firstResponse.data);
-    console.log("here");
     parseString(firstResponse.data, function (err, result) {
       Xml === undefined && setXml(result);
     });
