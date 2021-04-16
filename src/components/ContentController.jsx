@@ -1,4 +1,4 @@
-import Chart from '@bit/bbconsult.standalone-components.chart'
+import Chart from '@bit/bbconsult.standalone-components.wm-components.chart'
 // import Welcome from '@bit/bbconsult.standalone-components.welcome'
 import Welcome from "../tempComponents/Welcome";
 import { makeStyles } from '@material-ui/core'

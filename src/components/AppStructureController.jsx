@@ -11,7 +11,7 @@ var parseString = require("xml2js").parseString;
 var axios = require("axios");
 var base = require("base-64");
 
-var XMLurl = "http://localhost:8011/proxy/workflow/3/task/1/upload";
+var XMLurl = "http://localhost:8020/proxy/workflow/3/task/1/upload";
 var tok = "gui_client:kFjfAh68k$$ADUjPr?vPA";
 var hash = base.encode(tok);
 var Basic = "Basic " + hash;
@@ -57,6 +57,9 @@ const AppStructureController = () => {
         },
       }),
     ]);
+    console.log("hereWe");
+    console.log(firstResponse.data);
+    console.log("here");
     parseString(firstResponse.data, function (err, result) {
       Xml === undefined && setXml(result);
     });
