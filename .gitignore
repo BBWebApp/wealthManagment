@@ -22,10 +22,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 [B
-<<<<<<< HEAD
-cors-anywhere
-=======
 package.json
 package-lock.json
 package-lock.json
->>>>>>> 1cce26c57c00a320bae6151b455608cdf0819d95
