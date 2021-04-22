@@ -2,12 +2,12 @@
 export const UPLOAD_IMAGE = "UPLOAD_IMAGE";
 
 //REDUCERS
-export const uploadImage = (image, reportId) => {
-  
+export const uploadImage = (image, reportId, favourite) => {
   return {
     type: UPLOAD_IMAGE,
     image,
     reportId,
+    favourite,
   };
 };
 
@@ -15,13 +15,19 @@ export const uploadImage = (image, reportId) => {
 const initialState = {
   image: undefined,
   reportId: undefined,
+  favourite: false,
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case UPLOAD_IMAGE:
-      const { image, reportId } = action;
-      return { ...state, image: image, reportId: reportId };
+      const { image, reportId, favourite } = action;
+      return {
+        ...state,
+        image: image,
+        reportId: reportId,
+        favourite: favourite,
+      };
 
     default:
       return state;

@@ -34,19 +34,20 @@ const ReportChart = (props) => {
       });
   };
 
-  useEffect(() => {
-    Xml === undefined && getReport();
+  useEffect(async () => {
+    (await Xml) === undefined && getReport();
     if (Xml !== undefined) {
       const children = Xml[0].props.children;
-
       if (children !== undefined) {
         deepFind(children, (child) => {
           if (Object.keys(child).includes("props")) {
             if (Object.keys(child.props).includes("id")) {
-              if (child.props.id === "content") {
-                setText(
-                  ReactDOMServer.renderToStaticMarkup(child.props.children)
-                );
+              if (child.props.id.includes("resizableImage")) {
+                child.props.children.map((item) => {
+                  if (item.type === "embed") {
+                    setText(item.props.src);
+                  }
+                });
               }
             }
           }
@@ -55,7 +56,14 @@ const ReportChart = (props) => {
     }
   }, [Xml]);
 
-  return text !== undefined && <div> {ReactHtmlParser(text)} </div>;
+  return (
+    text !== undefined && (
+      <div>
+        <img width="460px" src={text} />
+      </div>
+    )
+  );
+  // return text !== undefined && <div> {ReactHtmlParser(text)} </div>;
 };
 
 export default ReportChart;

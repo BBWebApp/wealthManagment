@@ -1,14 +1,16 @@
-import { takeLatest } from "redux-saga/effects";
-import { take, put, call, fork, select, all } from "redux-saga/effects";
-import { handleGetUser } from "./handlers/screenShot";
-import { handleUploadImage } from "./handlers/uploadImage";
-import { GET_SCREENSHOTS } from "../ducks/screenShot";
+import { takeEvery } from "redux-saga/effects";
+import { GET_DOWNLOADIMAGES } from "../ducks/downloadImage";
 import { UPLOAD_IMAGE } from "../ducks/uploadImage";
+import { getSlicedImage, GET_SLICEDIMAGE } from "../ducks/serverCall";
+import { handleGetUser } from "./handlers/downloadImage";
+import { handleUploadImage } from "./handlers/uploadImage";
+import { handleServerCall } from "./handlers/serverCall";
 
 //check out any action that was dispatched and map it to the function
 export function* watchSaga() {
   /* take the latest action that got dispatched and execute it,
     helpful by multiple same dispatched actions */
-  yield takeLatest(UPLOAD_IMAGE, handleUploadImage);
-  yield takeLatest(GET_SCREENSHOTS, handleGetUser);
+  yield takeEvery(GET_SLICEDIMAGE, handleServerCall);
+  yield takeEvery(UPLOAD_IMAGE, handleUploadImage);
+  yield takeEvery(GET_DOWNLOADIMAGES, handleGetUser);
 }

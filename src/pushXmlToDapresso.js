@@ -3,7 +3,7 @@ var axios = require("axios");
 var base = require("base-64");
 var fs = require("fs");
 
-var url2 = "http://localhost:8020/proxy/workflow/3/task/1/upload";
+var url2 = "http://localhost:8011/proxy/workflow/3/task/1/upload";
 var tok = "gui_client:kFjfAh68k$$ADUjPr?vPA";
 var hash = base.encode(tok);
 var Basic = "Basic " + hash;

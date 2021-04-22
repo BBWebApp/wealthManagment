@@ -1,12 +1,14 @@
 import { combineReducers, createStore, applyMiddleware } from "redux";
 import createSagaMiddleware from "redux-saga";
 import uploadImage from "./ducks/uploadImage";
-import screenShotReducer from "./ducks/screenShot";
+import downloadImage from "./ducks/downloadImage";
+import serverCall from "./ducks/serverCall";
 import { watchSaga } from "./sagas/rootSaga";
 
 const reducer = combineReducers({
   uploadImage: uploadImage,
-  screenShot: screenShotReducer,
+  downloadImage: downloadImage,
+  serverCall: serverCall,
 }); // for multiple ducks
 
 const sagaMiddleware = createSagaMiddleware();

@@ -5,7 +5,7 @@ import AppStructureController from "./components/AppStructureController";
 
 
 /* 
-lcp --proxyUrl http://192.168.178.21:5002 --port 8011
+lcp --proxyUrl http://192.168.178.36:5002 --port 8011
  */
 
 

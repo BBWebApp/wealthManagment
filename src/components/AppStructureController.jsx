@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Typography, makeStyles } from "@material-ui/core";
 import Header from "@bit/bbconsult.standalone-components.wm-components.header";
-import Drawer from "@bit/bbconsult.standalone-components.wm-components.drawer";
-// import Drawer from '../tempComponents/Drawer'
+// import Drawer from "@bit/bbconsult.standalone-components.wm-components.drawer";
+import Drawer from "../tempComponents/Drawer";
 import ContentController from "./ContentController";
 
 const useStyles = makeStyles({});
@@ -11,7 +11,7 @@ var parseString = require("xml2js").parseString;
 var axios = require("axios");
 var base = require("base-64");
 
-var XMLurl = "http://localhost:8020/proxy/workflow/3/task/1/upload";
+var XMLurl = "http://localhost:8011/proxy/workflow/3/task/1/upload";
 var tok = "gui_client:kFjfAh68k$$ADUjPr?vPA";
 var hash = base.encode(tok);
 var Basic = "Basic " + hash;
