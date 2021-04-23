@@ -35,16 +35,11 @@ const setImage = (screenShots) => {
 const RecentlyUsedDashboard = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
-  useEffect(() => {
-    dispatch(getDownloadedImages());
-  }, []);
-
   var screenShots = useSelector((state) => {
     return state.downloadImage.images;
   }); // state.reducer.stateName
+
   if (screenShots) {
-    screenShots = JSON.parse(screenShots);
-    dispatch(getSlicedImage(screenShots[0]));
     screenShots.length > 0 && setImage(screenShots);
   }
 

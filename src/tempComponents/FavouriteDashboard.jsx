@@ -35,13 +35,9 @@ const setImage = (screenShots) => {
 const FavouriteDashboard = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
-  useEffect(() => {
-    dispatch(getDownloadedImages(true));
-  }, []);
 
   var screenShots = useSelector((state) => state.downloadImage.favs); // state.reducer.stateName
   if (screenShots) {
-    screenShots = JSON.parse(screenShots);
     setImage(screenShots);
   }
 

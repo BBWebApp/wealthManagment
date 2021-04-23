@@ -8,6 +8,8 @@ import { createRef, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { uploadImage } from "../redux/ducks/uploadImage";
 import FavoriteIcon from "@material-ui/icons/Favorite";
+import { getSlicedImage } from "../redux/ducks/serverCall";
+
 const useStyles = makeStyles({});
 
 const ReportTemplatePage = (props) => {
@@ -30,10 +32,19 @@ const ReportTemplatePage = (props) => {
     return dispatch(uploadImage(image, reportId, true));
   };
 
-  useEffect(async () => {
-    return await getImage();
+  useEffect(() => {
+    getImage();
   }, []);
-  image && dispatch(uploadImage(image, reportId));
+  useEffect(async () => {
+    await dispatch(getSlicedImage(image));
+  }, [image]);
+
+  var slicedImage = useSelector((state) => {
+    return state.serverCall.slicedImage;
+  }); // state.reducer.stateName
+  if (image && slicedImage) {
+    dispatch(uploadImage(slicedImage, reportId));
+  }
 
   return (
     <div>

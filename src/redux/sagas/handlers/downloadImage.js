@@ -10,10 +10,10 @@ export function* handleGetUser(action) {
   try {
     var response = yield call(requestGetUser, action);
     var { data } = response;
-
+    var imagesArray = JSON.parse(data);
     yield favouriteClicked
-      ? put(setFavsDownloadedImages(data))
-      : put(setDownloadedImages(data));
+      ? put(setFavsDownloadedImages(imagesArray))
+      : put(setDownloadedImages(imagesArray));
   } catch (error) {
     console.log(error);
   }
