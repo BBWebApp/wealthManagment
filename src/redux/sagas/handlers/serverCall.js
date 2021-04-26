@@ -3,11 +3,14 @@ import { requestServerCall } from "../requests/serverCall";
 import { setSlicedImage } from "../../ducks/serverCall";
 
 export function* handleServerCall(action) {
+  var image = action["image"];
+  var reportId = action["reportId"];
   try {
-    var response = yield call(requestServerCall, action);
-    console.log(response);
-    var slicedImage = "data:image/png;base64," + response.data;
-    yield put(setSlicedImage(slicedImage));
+    if (image) {
+      var response = yield call(requestServerCall, action);
+      var slicedImage = "data:image/png;base64," + response.data;
+      yield put(setSlicedImage(slicedImage, reportId));
+    }
   } catch (error) {
     console.log(error);
   }

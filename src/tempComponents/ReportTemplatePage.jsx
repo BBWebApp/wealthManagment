@@ -26,7 +26,7 @@ const ReportTemplatePage = (props) => {
   const getImage = () => {
     setTimeout(() => {
       takeScreenShot(ref.current);
-    }, 500);
+    }, 300);
   };
   const favouriteClicked = () => {
     return dispatch(uploadImage(image, reportId, true));
@@ -35,15 +35,15 @@ const ReportTemplatePage = (props) => {
   useEffect(() => {
     getImage();
   }, []);
-  useEffect(async () => {
-    await dispatch(getSlicedImage(image));
+  useEffect(() => {
+    image && dispatch(getSlicedImage(image, reportId));
   }, [image]);
 
   var slicedImage = useSelector((state) => {
-    return state.serverCall.slicedImage;
+    return state.serverCall;
   }); // state.reducer.stateName
-  if (image && slicedImage) {
-    dispatch(uploadImage(slicedImage, reportId));
+  if (image && slicedImage && reportId === slicedImage["reportId"]) {
+    dispatch(uploadImage(slicedImage["slicedImage"], slicedImage["reportId"]));
   }
 
   return (

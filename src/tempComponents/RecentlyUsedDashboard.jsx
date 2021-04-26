@@ -39,10 +39,7 @@ const RecentlyUsedDashboard = () => {
     return state.downloadImage.images;
   }); // state.reducer.stateName
 
-  if (screenShots) {
-    screenShots.length > 0 && setImage(screenShots);
-  }
-
+  screenShots && setImage(screenShots);
   return (
     <div>
       <Typography className={classes.recentlyUsed}>Recently used</Typography>

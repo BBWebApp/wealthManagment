@@ -3,25 +3,32 @@ export const GET_SLICEDIMAGE = "GET_SLICEDIMAGE";
 export const SET_SLICEDIMAGE = "SET_SLICEDIMAGE";
 
 //REDUCERS
-export const getSlicedImage = (image) => ({
+export const getSlicedImage = (image, reportId) => ({
   type: GET_SLICEDIMAGE,
   image: image,
+  reportId: reportId,
 });
 
-export const setSlicedImage = (slicedImage) => ({
-  type: SET_SLICEDIMAGE,
-  slicedImage: slicedImage,
-});
+export const setSlicedImage = (slicedImage, reportId) => {
+  console.log(reportId);
+  return {
+    type: SET_SLICEDIMAGE,
+    slicedImage: slicedImage,
+    reportId: reportId,
+  };
+};
 // STATE
 const initialState = {
   slicedImage: undefined,
+  reportId: undefined,
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case SET_SLICEDIMAGE:
       const { slicedImage } = action;
-      return { ...state, slicedImage: slicedImage };
+      const { reportId } = action;
+      return { ...state, slicedImage: slicedImage, reportId: reportId };
     default:
       return state;
   }

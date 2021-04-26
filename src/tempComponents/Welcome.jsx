@@ -20,7 +20,7 @@ const Welcome = () => {
   }, []);
   return (
     <div>
-      <FavouriteDashboard />
+      {/* <FavouriteDashboard /> */}
       <br />
       <br />
       <br />
