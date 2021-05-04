@@ -6,12 +6,12 @@ import ReportChart from "./ReportChart";
 
 const useStyles = makeStyles({
   report_content: {
-    width: "900px",
+    width: "1600px",
     marginLeft: "00px",
     marginRight: "0px",
     marginTop: "0px",
     marginBottom: "0px",
-    minHeight: "900px",
+    minHeight: "720px",
     display: "block",
     backgroundColor: "white",
     overflow: "hidden",
@@ -29,7 +29,9 @@ const ReportTemplateContent = (props) => {
     text: (
       <ReportText key={reportId} reportId={reportId} xmlResult={xmlResult} />
     ),
-    chart: <ReportChart key={reportId} reportId={reportId} xmlResult={xmlResult} />,
+    chart: (
+      <ReportChart key={reportId} reportId={reportId} xmlResult={xmlResult} />
+    ),
   };
 
   useEffect(() => {
@@ -38,10 +40,9 @@ const ReportTemplateContent = (props) => {
 
   return (
     xmlResult !== undefined &&
-    componentToLoad !== undefined && 
-    <div className={classes.report_content} >
-    {componentToLoad}
-    </div>
+    componentToLoad !== undefined && (
+      <div className={classes.report_content}>{componentToLoad}</div>
+    )
   );
 };
 

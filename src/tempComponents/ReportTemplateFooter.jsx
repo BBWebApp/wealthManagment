@@ -4,7 +4,7 @@ import { Typography, makeStyles } from "@material-ui/core";
 const useStyles = makeStyles({
   report_footer: {
     fontSize: "15px",
-    width: "900px",
+    width: "1600px",
     marginLeft: "0px",
     marginRight: "0px",
     marginTop: "0px",

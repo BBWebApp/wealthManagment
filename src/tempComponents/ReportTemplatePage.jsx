@@ -15,6 +15,7 @@ const useStyles = makeStyles({});
 const ReportTemplatePage = (props) => {
   const { xmlResult } = props;
   const { reportId } = props;
+  const reportElement = xmlResult[0][0].$.type;
   const dispatch = useDispatch();
 
   const classes = useStyles();
@@ -29,14 +30,18 @@ const ReportTemplatePage = (props) => {
     }, 300);
   };
   const favouriteClicked = () => {
-    return dispatch(uploadImage(image, reportId, true));
+    if (image && slicedImage && reportId === slicedImage["reportId"]) {
+      dispatch(
+        uploadImage(slicedImage["slicedImage"], slicedImage["reportId"], true)
+      );
+    }
   };
 
   useEffect(() => {
     getImage();
   }, []);
   useEffect(() => {
-    image && dispatch(getSlicedImage(image, reportId));
+    image && dispatch(getSlicedImage(image, reportId, reportElement));
   }, [image]);
 
   var slicedImage = useSelector((state) => {
@@ -62,11 +67,11 @@ const ReportTemplatePage = (props) => {
           >
             <FavoriteIcon />
           </IconButton>
-          <Paper ref={ref} variant="elevation">
+          <div ref={ref}>
             <ReportTemplateHeader key={reportId} />
             <ReportTemplateContent reportId={reportId} xmlResult={xmlResult} />
             <ReportTemplateFooter key={reportId} />
-          </Paper>
+          </div>
         </Grid>
       </div>
     </div>

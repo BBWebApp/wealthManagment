@@ -11,7 +11,25 @@ const ReportChart = (props) => {
   const { xmlResult } = props;
   const { reportId } = props;
   const [text, setText] = useState();
+  const [resizedText, setResizedText] = useState();
   const [Xml, setXml] = useState(undefined);
+
+  const imageToDataUri = (width, height) => {
+    var img_temp = new Image();
+    img_temp.src = text;
+    var canvas = document.createElement("canvas"),
+      ctx = canvas.getContext("2d"),
+      width = width;
+    height = height;
+
+    // set its dimension to target size
+    canvas.width = width;
+    canvas.height = height;
+
+    // draw source image into the off-screen canvas:
+    ctx.drawImage(img_temp, 0, 0, width, height);
+    return canvas.toDataURL();
+  };
 
   const getReport = () => {
     const tok = "gui_client:kFjfAh68k$$ADUjPr?vPA";
@@ -56,10 +74,15 @@ const ReportChart = (props) => {
     }
   }, [Xml]);
 
+  useEffect(() => {
+    text && setResizedText(imageToDataUri(1600, 1000));
+  }, [text]);
+
   return (
     text !== undefined && (
       <div>
-        <img width="460px" src={text} />
+        <img src={resizedText} />
+        <img src={text} style={{ display: "none" }} />
       </div>
     )
   );

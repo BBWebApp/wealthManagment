@@ -12,8 +12,9 @@ import { getSlicedImage } from "../redux/ducks/serverCall";
 const useStyles = makeStyles({
   recentlyUsed: {
     fontSize: "20px",
-    marginBottom: "5px",
-    borderBottom: "1px solid #000",
+    color: "rgb(60.0, 60.0, 60.0)",
+    marginBottom: "12px",
+    borderBottom: "1px solid #787878",
   },
 });
 
@@ -43,10 +44,15 @@ const RecentlyUsedDashboard = () => {
   return (
     <div>
       <Typography className={classes.recentlyUsed}>Recently used</Typography>
-      <Grid item container spacing={2}>
+      <Grid
+        style={{ marginLeft: "0px", marginTop: "0px" }}
+        item
+        container
+        spacing={6}
+      >
         {itemList.map((item) => {
           return (
-            <Grid item xs={12} sm={6} md={4}>
+            <Grid item>
               <SimpleCard {...item} />
             </Grid>
           );

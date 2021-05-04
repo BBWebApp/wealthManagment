@@ -20,11 +20,11 @@ const Welcome = () => {
   }, []);
   return (
     <div>
-      {/* <FavouriteDashboard /> */}
+      <RecentlyUsedDashboard />
       <br />
       <br />
       <br />
-      {<RecentlyUsedDashboard />}
+      <FavouriteDashboard />
     </div>
   );
 };

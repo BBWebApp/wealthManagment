@@ -11,8 +11,9 @@ import {
 const useStyles = makeStyles({
   recentlyUsed: {
     fontSize: "20px",
-    marginBottom: "5px",
-    borderBottom: "1px solid #000",
+    color: "rgb(60.0, 60.0, 60.0)",
+    marginBottom: "12px",
+    borderBottom: "1px solid #787878",
   },
 });
 
@@ -44,11 +45,16 @@ const FavouriteDashboard = () => {
   return (
     <div>
       <Typography className={classes.recentlyUsed}>Favourites</Typography>
-      <Grid item container spacing={2}>
+      <Grid
+        style={{ marginLeft: "0px", marginTop: "0px" }}
+        item
+        container
+        spacing={6}
+      >
         {screenShots &&
           itemList.map((item) => {
             return (
-              <Grid item xs={12} sm={6} md={4}>
+              <Grid item>
                 <SimpleCard {...item} />
               </Grid>
             );

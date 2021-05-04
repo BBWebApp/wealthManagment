@@ -1,16 +1,13 @@
 import { makeStyles } from "@material-ui/core";
 import React from "react";
 
-
 const useStyles = makeStyles({
   report_header: {
-    width: "900px",
+    width: "1600px",
     marginLeft: "0px",
     marginRight: "0px",
     marginTop: "0px",
     marginBottom: "0px",
-    minWidth: "900px",
-    maxWidth: "900px",
     display: "block",
     backgroundColor: "white",
     textAlign: "center",
