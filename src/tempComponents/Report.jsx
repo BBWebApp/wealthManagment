@@ -1,59 +1,47 @@
-import axios from 'axios'
-import Base64 from 'base-64'
-import React, { useEffect, useState } from 'react'
-import ReactHtmlParser from 'react-html-parser'
+import React, { useEffect, useState } from "react";
+import ReactHtmlParser from "react-html-parser";
+import { useSelector } from "react-redux";
 
+const Report = (props) => {
+  const [originalReport, setOriginalReport] = useState(undefined);
+  const [modifiedReport, setModifiedReport] = useState(undefined);
+  const { reportId } = props;
 
-const Report = props => {
-    
-  const [originalReport, setOriginalReport] = useState(undefined)
-  const [modifiedReport, setModifiedReport] = useState(undefined)
-  const { reportId } = props
+  var html = useSelector((state) => {
+    return state.serverCall.html;
+  }); // state.reducer.stateName
 
-  const removeReportBackgroundAndScrollbar = fullReport => {
-    const bodyIndexStart = fullReport.indexOf(`body {`)
+  var reportId_html_flag = useSelector((state) => {
+    return state.serverCall.reportId_html_flag;
+  }); // state.reducer.stateName
+
+  const removeReportBackgroundAndScrollbar = (fullReport) => {
+    const bodyIndexStart = fullReport.indexOf(`body {`);
     const bodyToReplace = fullReport.substring(
       bodyIndexStart,
       bodyIndexStart + 360
-    )
+    );
     const body =
-      fullReport.substring(bodyIndexStart, bodyIndexStart + 120) + '}'
+      fullReport.substring(bodyIndexStart, bodyIndexStart + 120) + "}";
     const modifiedReport = fullReport
       .replace(bodyToReplace, body)
-      .replaceAll(`contenteditable="true"`, '')
-      .replaceAll(`contenteditable="false"`, '')
+      .replaceAll(`contenteditable="true"`, "")
+      .replaceAll(`contenteditable="false"`, "");
 
-    setModifiedReport(modifiedReport)
-  }
+    setModifiedReport(modifiedReport);
+  };
 
-  const getReport = () => {
-    const tok = 'gui_client:kFjfAh68k$$ADUjPr?vPA'
-    const hash = Base64.encode(tok)
-    const Basic = 'Basic ' + hash
-    axios
-      .get(
-        'http://localhost:8011/proxy/fileserver/file/public/reports/test/' +
-          reportId,
-        {
-          headers: {
-            Authorization: Basic
-          }
-        }
-      )
-      .then(dataRecieved => {
-        const { data } = dataRecieved
-        
-        setOriginalReport(data)
-      })
-  }
+  const getReport = (html) => {
+    reportId === reportId_html_flag && setOriginalReport(html);
+  };
 
   useEffect(() => {
-    originalReport === undefined && getReport()
+    originalReport === undefined && getReport(html);
     originalReport !== undefined &&
-      removeReportBackgroundAndScrollbar(originalReport)
-  }, [originalReport])
+      removeReportBackgroundAndScrollbar(originalReport);
+  }, [originalReport, html]);
 
-  return <div>{ReactHtmlParser(modifiedReport)}</div>
-}
+  return <div>{ReactHtmlParser(modifiedReport)}</div>;
+};
 
-export default Report
+export default Report;

@@ -1,10 +1,8 @@
-import { makeStyles, Typography } from "@material-ui/core";
-import axios from "axios";
-import Base64 from "base-64";
-import { React, ReactElement, ReactNode, useEffect, useState } from "react";
+import { makeStyles } from "@material-ui/core";
+import { React, useEffect, useState } from "react";
 import { deepFind } from "react-children-utilities";
 import ReactHtmlParser from "react-html-parser";
-import ReactDOMServer from "react-dom/server";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles({});
 const ReportChart = (props) => {
@@ -14,6 +12,9 @@ const ReportChart = (props) => {
   const [resizedText, setResizedText] = useState();
   const [Xml, setXml] = useState(undefined);
 
+  var html = useSelector((state) => {
+    return state.serverCall.html;
+  }); // state.reducer.stateName
   const imageToDataUri = (width, height) => {
     var img_temp = new Image();
     img_temp.src = text;
@@ -31,29 +32,8 @@ const ReportChart = (props) => {
     return canvas.toDataURL();
   };
 
-  const getReport = () => {
-    const tok = "gui_client:kFjfAh68k$$ADUjPr?vPA";
-    const hash = Base64.encode(tok);
-    const Basic = "Basic " + hash;
-    axios
-      .get(
-        "http://localhost:8011/proxy/fileserver/file/public/reports/test/" +
-          reportId,
-        {
-          headers: {
-            Authorization: Basic,
-          },
-        }
-      )
-      .then((dataRecieved) => {
-        const { data } = dataRecieved;
-
-        Xml === undefined && setXml(ReactHtmlParser(data));
-      });
-  };
-
   useEffect(async () => {
-    (await Xml) === undefined && getReport();
+    (await Xml) === undefined && setXml(ReactHtmlParser(html));
     if (Xml !== undefined) {
       const children = Xml[0].props.children;
       if (children !== undefined) {

@@ -19,29 +19,25 @@ const useStyles = makeStyles({
 });
 
 const ReportTemplateContent = (props) => {
-  const [componentToLoad, setComponentToLoad] = useState(undefined);
   const { xmlResult } = props;
   const { reportId } = props;
-
   const classes = useStyles();
-  var componentType = {
-    table: <ReportTable key={reportId} xmlResult={xmlResult} />,
-    text: (
-      <ReportText key={reportId} reportId={reportId} xmlResult={xmlResult} />
-    ),
-    chart: (
-      <ReportChart key={reportId} reportId={reportId} xmlResult={xmlResult} />
-    ),
-  };
-
-  useEffect(() => {
-    setComponentToLoad(componentType[xmlResult[0][0].$.type]);
-  }, []);
 
   return (
-    xmlResult !== undefined &&
-    componentToLoad !== undefined && (
-      <div className={classes.report_content}>{componentToLoad}</div>
+    xmlResult !== undefined && (
+      <div className={classes.report_content}>
+        {xmlResult[0].map((item) => {
+          return item.$.type === "table" ? (
+            <ReportTable key={reportId} xmlResult={item} />
+          ) : item.$.type === "text" ? (
+            <ReportText key={reportId} reportId={reportId} xmlResult={item} />
+          ) : item.$.type === "chart" ? (
+            <ReportChart key={reportId} reportId={reportId} xmlResult={item} />
+          ) : (
+            <div>WTFFF</div>
+          );
+        })}
+      </div>
     )
   );
 };

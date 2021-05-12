@@ -1,10 +1,9 @@
-import { makeStyles, Typography } from "@material-ui/core";
-import axios from "axios";
-import Base64 from "base-64";
-import { React, ReactElement, ReactNode, useEffect, useState } from "react";
+import { makeStyles } from "@material-ui/core";
+import { React, useEffect, useState } from "react";
 import { deepFind } from "react-children-utilities";
-import ReactHtmlParser from "react-html-parser";
 import ReactDOMServer from "react-dom/server";
+import ReactHtmlParser from "react-html-parser";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles({});
 const ReportText = (props) => {
@@ -12,30 +11,12 @@ const ReportText = (props) => {
   const { reportId } = props;
   const [text, setText] = useState();
   const [Xml, setXml] = useState(undefined);
-
-  const getReport = () => {
-    const tok = "gui_client:kFjfAh68k$$ADUjPr?vPA";
-    const hash = Base64.encode(tok);
-    const Basic = "Basic " + hash;
-    axios
-      .get(
-        "http://localhost:8011/proxy/fileserver/file/public/reports/test/" +
-          reportId,
-        {
-          headers: {
-            Authorization: Basic,
-          },
-        }
-      )
-      .then((dataRecieved) => {
-        const { data } = dataRecieved;
-
-        Xml === undefined && setXml(ReactHtmlParser(data));
-      });
-  };
+  var html = useSelector((state) => {
+    return state.serverCall.html;
+  }); // state.reducer.stateName
 
   useEffect(() => {
-    Xml === undefined && getReport();
+    Xml === undefined && setXml(ReactHtmlParser(html));
     if (Xml !== undefined) {
       const children = Xml[0].props.children;
 

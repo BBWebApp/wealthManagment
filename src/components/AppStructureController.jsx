@@ -8,15 +8,8 @@ import ContentController from "./ContentController";
 const useStyles = makeStyles({});
 
 var parseString = require("xml2js").parseString;
-var axios = require("axios");
-var base = require("base-64");
 
-var XMLurl = "http://localhost:8011/proxy/workflow/3/task/1/upload";
-var tok = "gui_client:kFjfAh68k$$ADUjPr?vPA";
-var hash = base.encode(tok);
-var Basic = "Basic " + hash;
-
-const AppStructureController = () => {
+const AppStructureController = ({ appXml }) => {
   const [Xml, setXml] = useState();
   const [HeaderStructure, setHeaderStructure] = useState();
   const [DrawerStructure, setDrawerStructure] = useState();
@@ -50,14 +43,7 @@ const AppStructureController = () => {
   };
 
   useEffect(async () => {
-    const [firstResponse] = await Promise.all([
-      axios.get("http://localhost:8011/proxy/workflow/3/task/1/upload", {
-        headers: {
-          Authorization: Basic,
-        },
-      }),
-    ]);
-    parseString(firstResponse.data, function (err, result) {
+    parseString(appXml, function (err, result) {
       Xml === undefined && setXml(result);
     });
     Xml !== undefined && parseHeader(Xml);

@@ -27,6 +27,9 @@
                     <columnName name="index" />
                 </columns>
             </component>
+            <component type="chart">
+
+            </component>
         </item>
         <item name="paragraphs">
 
@@ -36,6 +39,50 @@
 
             </component>
         </item>
-    
+        <item name="tableAndChart">
+            <component type="table">
+                <data link="http://localhost:8011/proxy/workflow/2/task/1/node/out/payload/gzip" />
+                <columns>
+                    <columnName name="user_avg" />
+                    <columnName name="index" />
+                </columns>
+            </component>
+            <component type="chart">
+
+            </component>
+        </item>
+        <item name="chartAndTable">
+            <component type="chart">
+
+            </component>
+            <component type="table">
+                <data link="http://localhost:8011/proxy/workflow/2/task/1/node/out/payload/gzip" />
+                <columns>
+                    <columnName name="user_avg" />
+                    <columnName name="index" />
+                </columns>
+            </component>
+        </item>
+        <item name="tableChartTable">
+
+            <component type="table">
+                <data link="http://localhost:8011/proxy/workflow/2/task/1/node/out/payload/gzip" />
+                <columns>
+                    <columnName name="index" />
+                    <columnName name="latitude" />
+                </columns>
+            </component>
+            <component type="chart">
+
+            </component>
+            <component type="table">
+                <data link="http://localhost:8011/proxy/workflow/2/task/1/node/out/payload/gzip" />
+                <columns>
+                    <columnName name="user_name" />
+                    <columnName name="user_review_count" />
+                </columns>
+            </component>
+        </item>
+
     </category>
 </navigation>

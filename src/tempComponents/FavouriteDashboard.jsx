@@ -20,10 +20,8 @@ const useStyles = makeStyles({
 const setImage = (screenShots) => {
   var numberOfCards = itemList.length;
   var numberOfScreenshots = screenShots.length;
-
   for (let index = 1; index <= numberOfCards; index++) {
     var screenshotItem = screenShots[numberOfScreenshots - index];
-
     itemList[index - 1]["imgSrc"] = Object.keys(screenshotItem).map(
       (key) => screenshotItem[key]
     );

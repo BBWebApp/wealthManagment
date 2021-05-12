@@ -1,29 +1,37 @@
-import React from "react";
-import { BrowserRouter } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { BrowserRouter } from "react-router-dom";
 import AppStructureController from "./components/AppStructureController";
-
-
+import { useSelector, useDispatch } from "react-redux";
+import { getXML } from "./redux/ducks/serverCall";
 
 /* 
 lcp --proxyUrl http://192.168.178.36:5002 --port 8011
  */
 
-
-
 function App() {
+  const dispatch = useDispatch();
 
-  return (
+  useEffect(() => {
+    dispatch(getXML());
+  }, []);
+
+  var Xml = useSelector((state) => {
+    return state.serverCall.xml;
+  });
+
+  return Xml ? (
     <BrowserRouter>
       {/* {isAuthenticated === false && <LoginButton />} */}
 
       {/* {isAuthenticated === true && ( */}
       <React.Fragment>
-        <AppStructureController />
+        <AppStructureController appXml={Xml} />
       </React.Fragment>
-
 
       {/* )} */}
     </BrowserRouter>
+  ) : (
+    <div>404 XML not found</div>
   );
 }
 

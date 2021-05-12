@@ -4,11 +4,15 @@ import uploadImage from "./ducks/uploadImage";
 import downloadImage from "./ducks/downloadImage";
 import serverCall from "./ducks/serverCall";
 import { watchSaga } from "./sagas/rootSaga";
+import cropImage from "./ducks/cropImage";
+import tableData from "./ducks/tableData";
 
 const reducer = combineReducers({
   uploadImage: uploadImage,
   downloadImage: downloadImage,
   serverCall: serverCall,
+  cropImage: cropImage,
+  tableData: tableData,
 }); // for multiple ducks
 
 const sagaMiddleware = createSagaMiddleware();
