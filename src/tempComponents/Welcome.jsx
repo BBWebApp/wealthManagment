@@ -15,7 +15,6 @@ const Welcome = () => {
   useEffect(() => {
     dispatch(getDownloadedImages(true));
 
-    
     dispatch(getDownloadedImages());
   }, []);
   return (
