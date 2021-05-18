@@ -1,29 +1,20 @@
-import {
-  Avatar,
-  CardHeader,
-  CardMedia,
-  Collapse,
-  IconButton,
-  Paper,
-} from "@material-ui/core";
-import Button from "@material-ui/core/Button";
+import { CardHeader, CardMedia, IconButton, Paper } from "@material-ui/core";
+import Accordion from "@material-ui/core/Accordion";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import { red } from "@material-ui/core/colors";
+import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import DeleteIcon from "@material-ui/icons/Delete";
-import ShareIcon from "@material-ui/icons/Share";
-import React from "react";
-import ButtonBase from "@material-ui/core/ButtonBase";
-import { withRouter } from "react-router-dom";
-import { Link as RouterLink } from "react-router-dom";
-import Link from "@material-ui/core/Link";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import React from "react";
+import { useDispatch } from "react-redux";
+import { Link as RouterLink, withRouter } from "react-router-dom";
+import { getDownloadedImages } from "../redux/ducks/downloadImage";
+import { removeCard } from "../redux/ducks/uploadImage";
+
 const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 0,
@@ -59,12 +50,11 @@ const useStyles = makeStyles((theme) => ({
 function SimpleCard(props) {
   const classes = useStyles();
   const { history } = props;
+  const { deleteBtn } = props;
+  const { position } = props;
   const { avatarSrc, title, subtitle, description, imgSrc } = props;
-  const [expanded, setExpanded] = React.useState(false);
+  const dispatch = useDispatch();
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
   return (
     <Paper elevation="4">
       {imgSrc && (
@@ -76,6 +66,23 @@ function SimpleCard(props) {
             }}
             title={title}
             titleTypographyProps={{ variant: "h6" }}
+            action={
+              deleteBtn && (
+                <IconButton
+                  classes={{
+                    root: classes.headerRoot,
+                  }}
+                  onClick={() => {
+                    dispatch(removeCard(position));
+                    setTimeout(() => {
+                      dispatch(getDownloadedImages(true));
+                    }, 200);
+                  }}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              )
+            }
           />
           <Paper variant="elevation" elevation="2">
             <Link
@@ -99,9 +106,7 @@ function SimpleCard(props) {
                   <Typography>Description</Typography>
                 </AccordionSummary>
                 <CardContent>
-                  <Typography>
-                   {description}
-                  </Typography>
+                  <Typography>{description}</Typography>
                 </CardContent>
               </Accordion>
             </div>

@@ -10,26 +10,50 @@ var Basic = "Basic " + hash;
 var xmlImagesDownloaded = undefined;
 
 export function requestUpload(actions) {
-  var reportId = actions["reportId"];
-  var item = actions["image"];
-  var favouriteClicked = actions["favourite"];
-  axios
-    .get(favouriteClicked ? url1 : url2, {
-      headers: {
-        Authorization: Basic,
-      },
-    })
-    .then((response) => {
-      xmlImagesDownloaded = JSON.parse(response.data);
-      if (xmlImagesDownloaded.length > 8)
-        xmlImagesDownloaded = xmlImagesDownloaded.slice(-8);
-      var newElement = {};
-      newElement[reportId] = item;
-      xmlImagesDownloaded.push(newElement);
-      axios.post(favouriteClicked ? url1 : url2, xmlImagesDownloaded, {
-        headers: {
-          Authorization: Basic,
-        },
-      });
-    });
+  switch (actions.type) {
+    case "UPLOAD_IMAGE":
+      var reportId = actions["reportId"];
+      var item = actions["image"];
+      var favouriteClicked = actions["favourite"];
+      axios
+        .get(favouriteClicked ? url1 : url2, {
+          headers: {
+            Authorization: Basic,
+          },
+        })
+        .then((response) => {
+          xmlImagesDownloaded = JSON.parse(response.data);
+          if (xmlImagesDownloaded.length > 5)
+            xmlImagesDownloaded = xmlImagesDownloaded.slice(0, 5);
+          var newElement = {};
+          newElement[reportId] = item;
+          xmlImagesDownloaded = [newElement].concat(xmlImagesDownloaded);
+          axios.post(favouriteClicked ? url1 : url2, xmlImagesDownloaded, {
+            headers: {
+              Authorization: Basic,
+            },
+          });
+        });
+      break;
+    case "REMOVE_IMAGE":
+      var position = actions["position"];
+      axios
+        .get(url1, {
+          headers: {
+            Authorization: Basic,
+          },
+        })
+        .then((response) => {
+          xmlImagesDownloaded = JSON.parse(response.data);
+          xmlImagesDownloaded.splice(position, 1);
+          axios.post(url1, xmlImagesDownloaded, {
+            headers: {
+              Authorization: Basic,
+            },
+          });
+        });
+      break;
+    default:
+      break;
+  }
 }

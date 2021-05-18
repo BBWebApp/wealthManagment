@@ -1,5 +1,6 @@
 //ACTIONS
 export const UPLOAD_IMAGE = "UPLOAD_IMAGE";
+export const REMOVE_IMAGE = "REMOVE_IMAGE";
 
 //REDUCERS
 export const uploadImage = (image, reportId, favourite) => {
@@ -8,6 +9,12 @@ export const uploadImage = (image, reportId, favourite) => {
     image,
     reportId,
     favourite,
+  };
+};
+export const removeCard = (position) => {
+  return {
+    type: REMOVE_IMAGE,
+    position,
   };
 };
 

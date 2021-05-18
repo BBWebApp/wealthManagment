@@ -19,17 +19,13 @@ const useStyles = makeStyles({
 });
 
 const setImage = (screenShots) => {
-  var numberOfCards = itemList.length;
   var numberOfScreenshots = screenShots.length;
-  for (let index = 1; index <= numberOfCards; index++) {
-    var screenshotItem = screenShots[numberOfScreenshots - index];
-
-    itemList[index - 1]["imgSrc"] = Object.keys(screenshotItem).map(
+  for (let index = 0; index < numberOfScreenshots; index++) {
+    var screenshotItem = screenShots[index];
+    itemList[index]["imgSrc"] = Object.keys(screenshotItem).map(
       (key) => screenshotItem[key]
     );
-    itemList[index - 1]["title"] = Object.keys(screenshotItem).map(
-      (key) => key
-    );
+    itemList[index]["title"] = Object.keys(screenshotItem).map((key) => key);
   }
 };
 
@@ -40,7 +36,12 @@ const RecentlyUsedDashboard = () => {
     return state.downloadImage.images;
   }); // state.reducer.stateName
 
-  screenShots && setImage(screenShots);
+  if (screenShots) {
+    for (let index = 0; index < 6; index++) {
+      itemList[index]["imgSrc"] = "";
+    }
+    setImage(screenShots);
+  }
   return (
     <div>
       <Typography className={classes.recentlyUsed}>Recently used</Typography>

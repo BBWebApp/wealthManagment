@@ -3,7 +3,7 @@ import { GET_SLICEDIMAGE } from "../ducks/cropImage";
 import { GET_DOWNLOADIMAGES } from "../ducks/downloadImage";
 import { GET_REPORT_HTML, GET_XML } from "../ducks/serverCall";
 import { GET_TABLE_DATA } from "../ducks/tableData";
-import { UPLOAD_IMAGE } from "../ducks/uploadImage";
+import { UPLOAD_IMAGE, REMOVE_IMAGE } from "../ducks/uploadImage";
 import { handleCropImage } from "./handlers/cropImage";
 import { handleGetUser } from "./handlers/downloadImage";
 import { handleServerCall } from "./handlers/serverCall";
@@ -16,6 +16,6 @@ export function* watchSaga() {
   yield takeEvery([GET_REPORT_HTML, GET_XML], handleServerCall);
   yield takeEvery(GET_TABLE_DATA, handleTableData);
   yield takeEvery(GET_SLICEDIMAGE, handleCropImage);
-  yield takeEvery(UPLOAD_IMAGE, handleUploadImage);
+  yield takeEvery([UPLOAD_IMAGE,REMOVE_IMAGE], handleUploadImage);
   yield takeEvery(GET_DOWNLOADIMAGES, handleGetUser);
 }
