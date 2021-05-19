@@ -64,18 +64,18 @@ const Header = (props) => {
               id="menu-appbar"
               anchorEl={anchorEl}
               anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               open={open}
               onClose={() => setAnchorEl(null)}
             >
-              <MenuItem onClick={() => handleClicked('/')}>Home</MenuItem>
+              <MenuItem onClick={() => handleClicked("/")}>Home</MenuItem>
             </Menu>
           </div>
         </Toolbar>

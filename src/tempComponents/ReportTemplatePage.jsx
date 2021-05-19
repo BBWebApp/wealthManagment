@@ -17,7 +17,6 @@ const ReportTemplatePage = (props) => {
   const { reportId } = props;
   const reportElement = xmlResult[0][0].$.type;
   const [favsNames, setFavsNames] = useState(undefined);
-
   const dispatch = useDispatch();
 
   const classes = useStyles();
@@ -31,7 +30,7 @@ const ReportTemplatePage = (props) => {
   const getImage = () => {
     setTimeout(() => {
       takeScreenShot(ref.current);
-    }, 200);
+    }, 300);
   };
   const favouriteClicked = () => {
     if (image && slicedImage && reportId === slicedImage["reportId"]) {
@@ -46,12 +45,12 @@ const ReportTemplatePage = (props) => {
 
   useEffect(() => {
     getImage();
-    setTimeout(() => {
-      dispatch(getDownloadedImages(true));
-    }, 200);
   }, []);
   useEffect(() => {
     image && dispatch(getSlicedImage(image, reportId, reportElement));
+    // setTimeout(() => {
+    //   dispatch(getDownloadedImages(true));
+    // }, 1000);
   }, [image]);
 
   var slicedImage = useSelector((state) => {
@@ -61,15 +60,15 @@ const ReportTemplatePage = (props) => {
     dispatch(uploadImage(slicedImage["slicedImage"], slicedImage["reportId"]));
   }
 
-  useEffect(() => {
-    if (screenShots) {
+  useEffect(async () => {
+    if (image && screenShots) {
       favReportsNames = [];
       screenShots.map((item) => {
         favReportsNames.push(Object.keys(item)[0]);
       });
-      setFavsNames(favReportsNames);
+      await setFavsNames(favReportsNames);
     }
-  }, [screenShots]);
+  }, [image, screenShots]);
 
   return (
     <div>
