@@ -1,9 +1,10 @@
 import { Grid, IconButton, makeStyles } from "@material-ui/core";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-import React, { createRef, useEffect } from "react";
+import React, { createRef, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useScreenshot } from "use-react-screenshot";
 import { getSlicedImage } from "../redux/ducks/cropImage";
+import { getDownloadedImages } from "../redux/ducks/downloadImage";
 import { uploadImage } from "../redux/ducks/uploadImage";
 import ReportTemplateContent from "./ReportTemplateContent";
 import ReportTemplateFooter from "./ReportTemplateFooter";
@@ -15,6 +16,7 @@ const ReportTemplatePage = (props) => {
   const { xmlResult } = props;
   const { reportId } = props;
   const reportElement = xmlResult[0][0].$.type;
+  const [favsNames, setFavsNames] = useState(undefined);
 
   const dispatch = useDispatch();
 
@@ -22,6 +24,9 @@ const ReportTemplatePage = (props) => {
 
   const ref = createRef(null);
   const [image, takeScreenShot] = useScreenshot();
+
+  var screenShots = useSelector((state) => state.downloadImage.favs); // state.reducer.stateName
+  var favReportsNames = [];
 
   const getImage = () => {
     setTimeout(() => {
@@ -33,11 +38,17 @@ const ReportTemplatePage = (props) => {
       dispatch(
         uploadImage(slicedImage["slicedImage"], slicedImage["reportId"], true)
       );
+      setTimeout(() => {
+        dispatch(getDownloadedImages(true));
+      }, 200);
     }
   };
 
   useEffect(() => {
     getImage();
+    setTimeout(() => {
+      dispatch(getDownloadedImages(true));
+    }, 200);
   }, []);
   useEffect(() => {
     image && dispatch(getSlicedImage(image, reportId, reportElement));
@@ -49,6 +60,16 @@ const ReportTemplatePage = (props) => {
   if (image && slicedImage && reportId === slicedImage["reportId"]) {
     dispatch(uploadImage(slicedImage["slicedImage"], slicedImage["reportId"]));
   }
+
+  useEffect(() => {
+    if (screenShots) {
+      favReportsNames = [];
+      screenShots.map((item) => {
+        favReportsNames.push(Object.keys(item)[0]);
+      });
+      setFavsNames(favReportsNames);
+    }
+  }, [screenShots]);
 
   return (
     <div>

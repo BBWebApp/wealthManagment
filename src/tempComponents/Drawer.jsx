@@ -9,8 +9,10 @@ import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import StarBorder from "@material-ui/icons/StarBorder";
-import React, { useState } from "react";
+import StarIcon from "@material-ui/icons/Star";
+import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 const drawerWidth = 240;
 const Styles = makeStyles((theme) => ({
@@ -35,8 +37,23 @@ const useStyles = makeStyles({});
 const Drawer = (props) => {
   const classes = Styles();
   const { history } = props;
+  const [favsNames, setFavsNames] = useState(undefined);
   const { drawer } = props;
 
+  const dispatch = useDispatch();
+
+  var screenShots = useSelector((state) => state.downloadImage.favs); // state.reducer.stateName
+  var favReportsNames = [];
+
+  useEffect(() => {
+    if (screenShots) {
+      favReportsNames = [];
+      screenShots.map((item) => {
+        favReportsNames.push(Object.keys(item)[0]);
+      });
+      setFavsNames(favReportsNames);
+    }
+  }, [screenShots]);
   const [open, setOpen] = useState(true);
 
   const handleClick = () => {
@@ -91,7 +108,11 @@ const Drawer = (props) => {
                       key={item}
                     >
                       <ListItemIcon>
-                        <StarBorder />
+                        {favsNames && favsNames.includes(item) ? (
+                          <StarIcon />
+                        ) : (
+                          <StarBorder />
+                        )}
                       </ListItemIcon>
                       <ListItemText primary={item} />
                     </ListItem>

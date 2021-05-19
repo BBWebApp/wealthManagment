@@ -33,6 +33,7 @@ const FavouriteDashboard = () => {
   const classes = useStyles();
 
   var screenShots = useSelector((state) => state.downloadImage.favs); // state.reducer.stateName
+
   if (screenShots) {
     for (let index = 0; index < 6; index++) {
       itemList[index]["imgSrc"] = "";
