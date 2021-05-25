@@ -16,6 +16,11 @@ import { useSelector, useDispatch } from "react-redux";
 
 const drawerWidth = 240;
 const Styles = makeStyles((theme) => ({
+  root: {
+    "&:hover": {
+      backgroundColor: "rgb(225.0, 225.0, 225.0)",
+    },
+  },
   container: {
     display: "flex",
   },
@@ -29,6 +34,9 @@ const Styles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
   nested: {
     paddingLeft: theme.spacing(4),
+    "&:hover": {
+      backgroundColor: "rgb(225.0, 225.0, 225.0)",
+    },
   },
 }));
 
@@ -70,12 +78,12 @@ const Drawer = (props) => {
     >
       <div className={classes.toolbar} />
       <Divider />
-      <List
-        component="nav"
-        aria-labelledby="nested-list-subheader"
-        className={classes.root}
-      >
-        <ListItem button onClick={() => history.push(`/home`)}>
+      <List component="nav" aria-labelledby="nested-list-subheader">
+        <ListItem
+          className={classes.root}
+          button
+          onClick={() => history.push(`/home`)}
+        >
           <ListItemIcon>
             <InboxIcon />
           </ListItemIcon>
@@ -89,7 +97,7 @@ const Drawer = (props) => {
 
         {Object.keys(drawer).map((key) => (
           <>
-            <ListItem button onClick={handleClick}>
+            <ListItem className={classes.root} button onClick={handleClick}>
               <ListItemIcon>
                 <InboxIcon />
               </ListItemIcon>

@@ -16,12 +16,16 @@ const useStyles = makeStyles((theme) => ({
   },
   menuButton: {
     marginRight: theme.spacing(2),
+    "&:hover": {
+      backgroundColor: "#ed9a0d",
+    },
   },
   title: {
     flexGrow: 1,
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
+    backgroundColor: "rgb(90.0, 90.0, 90.0)",
   },
 }));
 
@@ -42,11 +46,11 @@ const Header = (props) => {
   };
 
   return (
-    <div className={classes.root}>
+    <div>
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            Photos
+            Wealth Managment
           </Typography>
 
           <div>

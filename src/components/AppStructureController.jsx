@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Typography, makeStyles } from "@material-ui/core";
-import Header from "@bit/bbconsult.standalone-components.wm-components.header";
+// import Header from "@bit/bbconsult.standalone-components.wm-components.header";
 // import Drawer from "@bit/bbconsult.standalone-components.wm-components.drawer";
+import Header from "../tempComponents/Header";
 import Drawer from "../tempComponents/Drawer";
 import ContentController from "./ContentController";
 

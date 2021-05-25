@@ -16,6 +16,11 @@ const useStyles = makeStyles({
     marginBottom: "12px",
     borderBottom: "1px solid #787878",
   },
+  cardHover: {
+    "&:hover": {
+      backgroundColor: "#ed9a0d",
+    },
+  },
 });
 
 const setImage = (screenShots) => {
@@ -46,14 +51,17 @@ const RecentlyUsedDashboard = () => {
     <div>
       <Typography className={classes.recentlyUsed}>Recently used</Typography>
       <Grid
-        style={{ marginLeft: "0px", marginTop: "0px" }}
-        item
+        style={{ marginLeft: "30px", marginTop: "30px" }}
         container
-        spacing={6}
+        spacing={1}
       >
         {itemList.map((item) => {
           return (
-            <Grid item>
+            <Grid
+              item
+              className={classes.cardHover}
+              style={{ marginRight: "30px", marginBottom: "30px" }}
+            >
               <SimpleCard {...item} />
             </Grid>
           );
