@@ -41,10 +41,15 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: red[500],
   },
   headerRoot: {
-    maxHeight: "6px",
+    maxHeight: "12px",
   },
   headerTitle: {
     color: "rgb(120.0, 120.0, 120.0)",
+  },
+  deleteBtn: {
+    "&:hover": {
+      color: "#ed9a0d",
+    },
   },
 }));
 function SimpleCard(props) {
@@ -69,9 +74,7 @@ function SimpleCard(props) {
             action={
               deleteBtn && (
                 <IconButton
-                  classes={{
-                    root: classes.headerRoot,
-                  }}
+                  style={{ backgroundColor: "white", maxHeight: "12px" }}
                   onClick={() => {
                     dispatch(removeCard(position));
                     setTimeout(() => {
@@ -79,7 +82,7 @@ function SimpleCard(props) {
                     }, 200);
                   }}
                 >
-                  <DeleteIcon />
+                  <DeleteIcon className={classes.deleteBtn} />
                 </IconButton>
               )
             }

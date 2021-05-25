@@ -57,13 +57,15 @@ const FavouriteDashboard = () => {
         {screenShots &&
           itemList.map((item, position) => {
             return (
-              <Grid
-                item
-                className={classes.cardHover}
-                style={{ marginRight: "30px", marginBottom: "30px" }}
-              >
-                <SimpleCard {...item} deleteBtn={true} position={position} />
-              </Grid>
+              item.imgSrc !== "" && (
+                <Grid
+                  item
+                  className={classes.cardHover}
+                  style={{ marginRight: "30px", marginBottom: "30px" }}
+                >
+                  <SimpleCard {...item} deleteBtn={true} position={position} />
+                </Grid>
+              )
             );
           })}
       </Grid>

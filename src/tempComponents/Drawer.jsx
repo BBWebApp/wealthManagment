@@ -117,7 +117,7 @@ const Drawer = (props) => {
                     >
                       <ListItemIcon>
                         {favsNames && favsNames.includes(item) ? (
-                          <StarIcon />
+                          <StarIcon style={{"color" : "#ed9a0d"}} />
                         ) : (
                           <StarBorder />
                         )}
