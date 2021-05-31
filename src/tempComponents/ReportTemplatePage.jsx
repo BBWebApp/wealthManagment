@@ -29,6 +29,7 @@ const ReportTemplatePage = (props) => {
 
   const getImage = () => {
     setTimeout(() => {
+      dispatch(getDownloadedImages(true));
       takeScreenShot(ref.current);
     }, 300);
   };

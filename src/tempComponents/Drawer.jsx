@@ -48,8 +48,6 @@ const Drawer = (props) => {
   const [favsNames, setFavsNames] = useState(undefined);
   const { drawer } = props;
 
-  const dispatch = useDispatch();
-
   var screenShots = useSelector((state) => state.downloadImage.favs); // state.reducer.stateName
   var favReportsNames = [];
 
@@ -117,7 +115,7 @@ const Drawer = (props) => {
                     >
                       <ListItemIcon>
                         {favsNames && favsNames.includes(item) ? (
-                          <StarIcon style={{"color" : "#ed9a0d"}} />
+                          <StarIcon style={{ color: "#ed9a0d" }} />
                         ) : (
                           <StarBorder />
                         )}

@@ -5,7 +5,11 @@ import { Typography, makeStyles } from "@material-ui/core";
 import Header from "../tempComponents/Header";
 import Drawer from "../tempComponents/Drawer";
 import ContentController from "./ContentController";
-
+import { useDispatch } from "react-redux";
+import {
+  getDownloadedImages,
+  GET_DOWNLOADIMAGES,
+} from "../redux/ducks/downloadImage";
 const useStyles = makeStyles({});
 
 var parseString = require("xml2js").parseString;
@@ -15,9 +19,11 @@ const AppStructureController = ({ appXml }) => {
   const [HeaderStructure, setHeaderStructure] = useState();
   const [DrawerStructure, setDrawerStructure] = useState();
   const [ContentStructure, setContentStructure] = useState();
+  const dispatch = useDispatch();
 
   const parseHeader = (Xml) => {};
   const parseDrawer = (Xml) => {
+  
     var HeaderObj = {};
     Object.keys(Xml["navigation"]["category"]).map((single) => {
       var categoryName = Xml.navigation.category[single].$.name;

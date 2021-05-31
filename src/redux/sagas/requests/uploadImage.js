@@ -23,8 +23,12 @@ export function requestUpload(actions) {
         })
         .then((response) => {
           xmlImagesDownloaded = JSON.parse(response.data);
-          if (xmlImagesDownloaded.length > 5)
+          if (xmlImagesDownloaded.length > 5) {
             xmlImagesDownloaded = xmlImagesDownloaded.slice(0, 5);
+          }
+          xmlImagesDownloaded = xmlImagesDownloaded.filter(
+            (item) => Object.keys(item)[0] !== reportId
+          );
           var newElement = {};
           newElement[reportId] = item;
           xmlImagesDownloaded = [newElement].concat(xmlImagesDownloaded);
