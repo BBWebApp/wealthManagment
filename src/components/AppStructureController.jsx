@@ -13,6 +13,11 @@ import {
 const useStyles = makeStyles({});
 
 var parseString = require("xml2js").parseString;
+var stripNS = require("xml2js").processors.stripPrefix;
+const options = {
+  tagNameProcessors: [stripNS],
+  explicitArray: false,
+};
 
 const AppStructureController = ({ appXml }) => {
   const [Xml, setXml] = useState();
@@ -20,19 +25,59 @@ const AppStructureController = ({ appXml }) => {
   const [DrawerStructure, setDrawerStructure] = useState();
   const [ContentStructure, setContentStructure] = useState();
   const dispatch = useDispatch();
+  var drawerObj = {};
+
+  const traverseNode = (packageExplorer, drawerObj) => {
+    var packageCateogryReportName;
+    Object.keys(packageExplorer).map((packageItemsOrCategories) => {
+      switch (packageItemsOrCategories) {
+        case "$":
+          packageCateogryReportName =
+            packageExplorer[packageItemsOrCategories].name;
+          drawerObj[packageCateogryReportName] = new Array();
+          break;
+        case "item":
+          drawerObj[packageCateogryReportName].push(
+            packageExplorer[packageItemsOrCategories].$.name
+          );
+          break;
+        case "category":
+          if (Array.isArray(packageExplorer[packageItemsOrCategories])) {
+            packageExplorer[packageItemsOrCategories].map((singleCategory) => {
+              traverseNode(
+                singleCategory,
+                drawerObj[packageCateogryReportName]
+              );
+            });
+          } else {
+            traverseNode(
+              packageExplorer[packageItemsOrCategories],
+              drawerObj[packageCateogryReportName]
+            );
+          }
+
+          break;
+        default:
+          break;
+      }
+    });
+  };
 
   const parseHeader = (Xml) => {};
   const parseDrawer = (Xml) => {
-  
-    var HeaderObj = {};
-    Object.keys(Xml["navigation"]["category"]).map((single) => {
-      var categoryName = Xml.navigation.category[single].$.name;
-      HeaderObj[categoryName] = new Array();
-      Xml.navigation.category[single].item.map((items) => {
-        HeaderObj[categoryName].push(items.$.name);
-      });
+    Xml["navigation"]["category"].map((single) => {
+      var packageExplorer = single;
+      traverseNode(packageExplorer, drawerObj);
     });
-    setDrawerStructure(HeaderObj);
+    setDrawerStructure(drawerObj);
+    // Object.keys(Xml["navigation"]["category"]).map((single) => {
+    //   var categoryName = Xml.navigation.category[single].$.name;
+    //   drawerObj[categoryName] = new Array();
+    //   Xml.navigation.category[single].item.map((items) => {
+    //     drawerObj[categoryName].push(items.$.name);
+    //   });
+    // });
+    // console.log(drawerObj);
   };
   const parseContent = (Xml) => {
     var ContentObj = {};
@@ -50,19 +95,20 @@ const AppStructureController = ({ appXml }) => {
   };
 
   useEffect(async () => {
-    parseString(appXml, function (err, result) {
+    parseString(appXml, options, function (err, result) {
       Xml === undefined && setXml(result);
     });
     Xml !== undefined && parseHeader(Xml);
     Xml !== undefined && parseDrawer(Xml);
-    Xml !== undefined && parseContent(Xml);
+    // Xml !== undefined && parseContent(Xml);
   }, [Xml]);
 
-  return Xml !== undefined && ContentStructure !== undefined ? (
+  // && ContentStructure !== undefined ?
+  return Xml !== undefined ? (
     <React.Fragment>
       <Header header={HeaderStructure} />
       <Drawer drawer={DrawerStructure} />
-      <ContentController content={ContentStructure} />
+      {/* <ContentController content={ContentStructure} /> */}
     </React.Fragment>
   ) : (
     <React.Fragment>

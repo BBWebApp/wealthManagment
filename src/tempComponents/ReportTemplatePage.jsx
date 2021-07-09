@@ -18,7 +18,6 @@ const ReportTemplatePage = (props) => {
   const reportElement = xmlResult[0][0].$.type;
   const [favsNames, setFavsNames] = useState(undefined);
   const dispatch = useDispatch();
-
   const classes = useStyles();
 
   const ref = createRef(null);
@@ -84,7 +83,11 @@ const ReportTemplatePage = (props) => {
           aria-label="add to favorites"
           onClick={favouriteClicked}
         >
-          <FavoriteIcon />
+          {favsNames !== undefined && favsNames.includes(reportId) ? (
+            <FavoriteIcon style={{ color: "#ed9a0d" }} />
+          ) : (
+            <FavoriteIcon />
+          )}
         </IconButton>
         <div ref={ref}>
           <ReportTemplateHeader key={reportId} />

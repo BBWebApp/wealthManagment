@@ -9,10 +9,15 @@ const useStyles = makeStyles({});
 const ReportText = (props) => {
   const { xmlResult } = props;
   const { reportId } = props;
+  const { order } = props;
+
   const [text, setText] = useState();
   const [Xml, setXml] = useState(undefined);
+
   var html = useSelector((state) => {
-    return state.serverCall.html;
+    var temp = state.serverCall.html;
+    var text = temp[order]["Text"];
+    return text;
   }); // state.reducer.stateName
 
   useEffect(() => {
@@ -25,6 +30,8 @@ const ReportText = (props) => {
           if (Object.keys(child).includes("props")) {
             if (Object.keys(child.props).includes("id")) {
               if (child.props.id === "content") {
+                console.log(child.props.children);
+
                 setText(
                   ReactDOMServer.renderToStaticMarkup(child.props.children)
                 );

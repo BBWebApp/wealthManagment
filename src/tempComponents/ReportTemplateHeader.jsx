@@ -16,7 +16,7 @@ const useStyles = makeStyles({
   },
 });
 
-const ReportTemplateHeader = () => {
+const ReportTemplateHeader = (props) => {
   const classes = useStyles();
   return (
     <div className={classes.report_header}>

@@ -14,9 +14,10 @@ export const setXML = (xml) => ({
   type: SET_XML,
   xml: xml,
 });
-export const getReportHtml = (reportId) => ({
+export const getReportHtml = (reportId, packageId) => ({
   type: GET_REPORT_HTML,
   reportId_html_flag: reportId,
+  packageId: packageId,
 });
 
 export const setReportHtml = (html, reportId) => ({
@@ -27,6 +28,7 @@ export const setReportHtml = (html, reportId) => ({
 // STATE
 const initialState = {
   reportId_html_flag: undefined,
+  packageId: undefined,
   xml: undefined,
   html: undefined,
 };

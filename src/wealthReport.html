@@ -1,1 +1,465 @@
-[]
+"<html>
+
+<head>\n
+    <meta charset=\"utf-8\">\n\n
+    <!--http://89.110.140.36:5003/fileserver/statics/rangy-core.js-->\n\n
+    <script src=\"http://www.bbconsult.de/dapresso/jquery-1.12.14.js\"></script>\n
+    <script src=\"http://www.bbconsult.de/dapresso/jquery-ui-1.12.1.js\"></script>\n
+    <script src=\"http://www.bbconsult.de/dapresso/rangy-core.js\"></script>\n
+    <link rel=\"stylesheet\" href=\"http://www.bbconsult.de/dapresso/jquery-ui-1.12.1.css\">\n\n
+    <script
+        language=\"javascript\">\n    /** \n          ---------------------------------------\n          Java FX - Wrapper functions (Bridge)\n          ---------------------------------------\n          */\n\n    /**\n      Wrapper to log to javafx(log4j), if html started from java application\n      otherwise log to JS-console\n      **/\n    function logFX(message) {
+            \n      if (typeof java === \"undefined\" || java === null) {\n        console.log(message);\n      } else {\n        java.logInfo(message);\n      }\n    }\n\n    function informWheelEvent(delta) {\n      if (typeof java === \"undefined\" || java === null) {\n        logFX(\n          \"Java FX not available for calling java.eventWheelMouse(delta)\"\n        );\n      } else {\n        //javaEvent.eventWheelMouse(delta);\n      }\n    }\n\n    function mutationObserved(mutation, className) {\n      if (typeof java === \"undefined\" || java === null) {\n        logFX(\n          \"Java FX not available for calling java.mutationObserved(mutation, className) \" +\n          className\n        );\n      } else {\n        java.mutationObserved(mutation, className);\n        //logFX(\"Java FX not available for calling java.mutationObserved(mutation, className) \" + className);\n      }\n    }\n\n    function checkStyle() {\n      if (typeof java === \"undefined\" || java === null) {\n        logFX(\"Java FX not available for calling java.checkStyle()\");\n      } else {\n        java.checkStyle();\n      }\n    }\n\n    /** \n      ---------------------------------------\n      DOM - Observer (any change)\n      ---------------------------------------\n      */\n\n    // config object\n    const config = {\n      attributes: true,\n      attributeOldValue: true,\n      characterData: true,\n      characterDataOldValue: true,\n      childList: true,\n      subtree: true,\n    };\n\n    // subscriber function\n    function subscriber(mutations) {\n      //TODO bundle several muations\n      mutationObserved(\n        \"mutation overall\",\n        document.getElementById(\"page\").className\n      );\n\n      // item itself anf childes\n      mutations.forEach((mutation) => {\n        /**\n              for (var i = 0; i < mutation.addedNodes.length; i++) {\n              logFX('  \"' + mutation.addedNodes[i].textContent + '\" added');\n              }\n              **/\n        //mutationObserved(\"mutation - \" + mutation.type + \", \" + mutation.attributeName\n        //+ \", \" + mutation.target.tagName, document.getElementById('page').className);\n      });\n    }\n\n    // instantiating observer\n    const observer = new MutationObserver(subscriber);\n\n    /* furture useage:\n      // stop observing\n      observer.disconnect();\n\n      // empties observer instance and returns records \n      observer.takeRecords(); // -> MutationRecords\n      */\n\n    /** \n      ---------------------------------------\n      Native JS\n      ---------------------------------------\n      */\n\n    /**\n      Hello World when window is loaded\n      **/\n    window.onload = function (e) {\n      logFX(\"Window fully loaded by JS-Engine from content!\");\n    };\n\n    window.onerror = function (message, file, line, col, error) {\n      alert(\"Error occurred: \" + error.message);\n      return false;\n    };\n\n    window.addEventListener(\"error\", function (e) {\n      alert(\"Error occurred: \" + e.error.message);\n      return false;\n    });\n\n    /**\n      Register for observing target\n      **/\n    function initEditor() {\n      observer.observe(document.getElementById(\"content\"), config);\n    }\n\n    /**\n      prevent spacbar to be used for srolling \n      **/\n    window.onkeydown = function (e) {\n      if (e.keyCode == 32 && e.target != document.body) {\n        insertAtCursor(document.activeElement, \" \");\n        return false;\n      } else if (e.keyCode == 32) {\n        return false;\n      } else if (e.keyCode == 13) {\n        // ENTER-KEY\n        logFX(\"reloading page after ENTER-KEY\");\n        location.reload();\n        return true;\n      } else {\n        return true;\n      }\n      return true;\n      //return !(e.keyCode == 32 && e.target == document.body);\n    };\n\n    /** \n      inform javafx in case the scroll wheel has been moved\n      **/\n\n    window.addEventListener(\"wheel\", (event) => {\n      //logFX(\"in addEventListener for 'wheel'\");\n      const delta = Math.sign(event.deltaY);\n      informWheelEvent(delta);\n    });\n\n    window.addEventListener(\"mouseup\", (event) => {\n      checkStyle();\n    });\n\n    window.addEventListener(\"keyup\", (event) => {\n      checkStyle();\n    });\n\n    /**\n      listen to dragover\n      **/\n    /**\n      document.ondragover = function(evt) {\n          evt = evt || window.event;\n          var x = evt.pageX,\n              y = evt.pageY;\n      }\n      **/\n\n    function setReportNoneditable() {\n      document.getElementById(\"flexible\").contentEditable = \"false\"\n      document.getElementById(\"margin\").contentEditable = \"false\"\n      document.getElementById(\"page\").contentEditable = \"false\"\n      document.getElementById(\"content\").contentEditable = \"false\"\n    }\n    /**\n      get the element at caret position\n      **/\n    function getSelectionStart() {\n      var node = document.getSelection().anchorNode;\n      return node.nodeType == 3 ? node.parentNode : node;\n    }\n\n    /**\n      get the elements in ueser'sselection\n      **/\n    function getSelectedNodes() {\n      var selectedNodes = [];\n      var sel = window.getSelection();\n      for (var i = 0; i < sel.rangeCount; ++i) {\n        selectedNodes = selectedNodes.concat(sel.getRangeAt(i).node);\n      }\n      return selectedNodes;\n    }\n\n    /**\n      insert character at caret position\n      **/\n    function insertAtCursor(input, textToInsert) {\n      const isSuccess = document.execCommand(\n        \"insertText\",\n        false,\n        textToInsert\n      );\n\n      // Firefox (non-standard method)\n      if (!isSuccess && typeof input.setRangeText === \"function\") {\n        const start = input.selectionStart;\n        input.setRangeText(textToInsert);\n        // update cursor to be at the end of insertion\n        input.selectionStart = input.selectionEnd =\n          start + textToInsert.length;\n\n        // Notify any possible listeners of the change\n        const e = document.createEvent(\"UIEvent\");\n        e.initEvent(\"input\", true, false);\n        input.dispatchEvent(e);\n      }\n    }\n\n    function pasteHtmlAtCaret(html, selectPastedContent) {\n      var sel, range;\n      if (window.getSelection) {\n        // IE9 and non-IE\n        sel = window.getSelection();\n\n        if (sel.getRangeAt && sel.rangeCount) {\n          range = sel.getRangeAt(0);\n          range.deleteContents();\n\n          // Range.createContextualFragment() would be useful here but is\n          // only relatively recently standardized and is not supported in\n          // some browsers (IE9, for one)\n          var el = document.createElement(\"div\");\n          el.innerHTML = html;\n          var frag = document.createDocumentFragment(),\n            node,\n            lastNode;\n\n          while ((node = el.firstChild)) {\n            lastNode = frag.appendChild(node);\n          }\n          var firstNode = frag.firstChild;\n          range.insertNode(frag);\n\n          // Preserve the selection\n          if (lastNode) {\n            range = range.cloneRange();\n            range.setStartAfter(lastNode);\n            if (selectPastedContent) {\n              range.setStartBefore(firstNode);\n            } else {\n              range.collapse(true);\n            }\n            sel.removeAllRanges();\n            sel.addRange(range);\n          }\n        }\n      } else if ((sel = document.selection) && sel.type != \"Control\") {\n        // IE < 9\n        var originalRange = sel.createRange();\n        originalRange.collapse(true);\n        sel.createRange().pasteHTML(html);\n        if (selectPastedContent) {\n          range = sel.createRange();\n          range.setEndPoint(\"StartToStart\", originalRange);\n          range.select();\n        }\n      }\n    }\n\n    /**\n      insert span tag with font-size before and/or afterselected text -> OBSOLETE\n      **/\n    function addSpanTagForFontSize(fontSize) {\n      //var sel, range, expandedSelRange, node;\n\n      var span = document.createElement(\"span\");\n      span.className = \"fontsize\" + fontSize;\n\n      if (window.getSelection) {\n        sel = window.getSelection();\n\n        if (sel.getRangeAt && sel.rangeCount) {\n          var range = sel.getRangeAt(0).cloneRange();\n          range.surroundContents(span);\n          sel.removeAllRanges();\n          sel.addRange(range);\n        }\n      }\n    }\n\n    function getNthOccurance(string, seek, occurance) {\n      var index = 0,\n        i = 1;\n\n      while (index !== -1) {\n        index = string.indexOf(seek, index + 1);\n        if (occurance === i) {\n          break;\n        }\n        i++;\n      }\n      if (index !== -1) {\n        console.log(\"Occurance found in \" + index + \" position\");\n      } else if (index === -1 && i !== occurance) {\n        console.log(\"Occurance not found in \" + occurance + \" position\");\n      } else {\n        console.log(\"Occurance not found\");\n      }\n\n      return index;\n    }\n\n    function changeFontSize(fontSize) {\n      // than add new size\n      //addSpanTagForFontSize(fontSize);\n\n      var selectedHTML = rangy.getSelection().toHtml();\n\n      insertAtCursor(document.activeElement, \"#MARK#\");\n\n      var fullHTML = document.documentElement.innerHTML;\n      var startIndex = getNthOccurance(fullHTML, \"#MARK#\", 3);\n      var htmlPartII = fullHTML.substring(startIndex); //+6+selectedHTML.length);\n      var newHTML = selectedHTML;\n\n      // remove all <span class='fontsize\"> from seletedHTML\n      while (newHTML.indexOf('class=\"fontsize') >= 0) {\n        newHTML = newHTML.replace('class=\"fontsize', 'class=\"dummy');\n      }\n\n      newHTML =\n        '<span class=\"fontsize' + fontSize + '\">' + newHTML + \"</span>\";\n\n      var finalHTML =\n        fullHTML.substring(0, startIndex) + newHTML + htmlPartII.substring(6);\n      document.documentElement.innerHTML = finalHTML;\n    }\n\n    function getFontSize() {\n      var fontSize = \"0\";\n\n      var node = getSelectionStart();\n\n      // get font size direct from element\n      if (node.className.startsWith(\"fontsize\")) {\n        fontSize = node.className.substr(\"fontsize\".length);\n      }\n\n      // get font size from parent, until body is reached\n      var parent = node.parentNode;\n      while (\n        fontSize == \"0\" &&\n        parent != undefined &&\n        parent.localName != \"body\"\n      ) {\n        if (parent.className.startsWith(\"fontsize\")) {\n          fontSize = parent.className.substr(\"fontsize\".length);\n        }\n        parent = parent.parentNode;\n      }\n\n      //last but not least, get defaut fontsize from style\n      if (fontSize == \"0\") {\n        fontSize = 11;\n      }\n\n      return parseInt(fontSize, 10);\n    }\n\n    function replaceStringInHTML(from, to) {\n      var fullHTML = document.documentElement.innerHTML;\n      var finalHTML = fullHTML.replace(from, to);\n      document.documentElement.innerHTML = finalHTML;\n\n      //var fullHTML = document.documentElement.outerHTML\n      //var finalHTML = fullHTML.replace(from, to);\n      //document.documentElement.outerHTML = finalHTML;\n    }\n\n    function reloadPage() {\n      $(\"#resizableImage\").resizable();\n      $(\"#resizableImage1\").resizable();\n      $(\"#resizableImage2\").resizable();\n      $(\"#resizableImage3\").resizable();\n      $(\"#resizableImage4\").resizable();\n      $(\"#resizableImage5\").resizable();\n      $(\"#resizableImage6\").resizable();\n      $(\"#resizableImage7\").resizable();\n      $(\"#resizableImage8\").resizable();\n      $(\"#resizableImage9\").resizable();\n      $(\"#resizableImage10\").resizable();\n\n      $(\"th\").resizable();\n      $(\"table\").resizable();\n      logFX(\"page reloaded\");\n    }\n\n    function getTableStyleClass(id) {\n      var classList = document.getElementById(id).classList;\n      var wrongClasses = [\n        \"centerAlignTable\",\n        \"ui-resizable\",\n        \"leftAlignTable\",\n        \"rightAlignTable\",\n      ];\n      for (var i = 0; i < classList.length; i++) {\n        if (!(wrongClasses.indexOf(classList[i]) > -1)) {\n          return classList[i];\n        }\n      }\n    }\n\n    function getTablePositionClass(id) {\n      var classList = document.getElementById(id).classList;\n      var positionClasses = [\n        \"centerAlignTable\",\n        \"leftAlignTable\",\n        \"rightAlignTable\",\n      ];\n\n      if (classList.contains(positionClasses[0])) return positionClasses[0];\n      else if (classList.contains(positionClasses[1]))\n        return positionClasses[1];\n      else if (classList.contains(positionClasses[2]))\n        return positionClasses[2];\n    }\n    function removeTableById(id) {\n      document.getElementById(id).remove();\n    }\n\n    function getTableById(id) {\n      return document.getElementById(id);\n    }\n\n    function getTableColumnNamesById(id) {\n      var columnsAsCollection = document\n        .getElementById(id)\n        .getElementsByTagName(\"th\");\n      var tableHeader = [];\n\n      for (var i = 0; i < columnsAsCollection.length; i++) {\n        tableHeader[i] = columnsAsCollection[i].innerHTML;\n      }\n      return tableHeader;\n    }\n    function getNumberOfRowsById(id) {\n      var node = document.getElementById(id);\n      return node.rows.length;\n    }\n    function getNumberOfColumnsById(id) {\n      var node = document.getElementById(id);\n      console.log(typeof node);\n      return node.rows[0].cells.length;\n    }\n    function getNumberOfRows() {\n      var node =\n        document.getSelection().anchorNode.parentNode.parentNode.parentNode;\n      return node.rows.length;\n    }\n    function getNumberOfColumns() {\n      var node =\n        document.getSelection().anchorNode.parentNode.parentNode.parentNode;\n      return node.rows[0].cells.length;\n    }\n    function getTableContentsById(id) {\n      var node = document.getElementById(id);\n      var tableArray = new Object();\n      tableArray = [];\n      for (var i = 0, row; (row = node.rows[i]); i++) {\n        tableArray[i] = [];\n        for (var j = 0, col; (col = row.cells[j]); j++) {\n          tableArray[i][j] = col.innerHTML;\n        }\n      }\n      return tableArray;\n    }\n    function getTableContents() {\n      var node =\n        document.getSelection().anchorNode.parentNode.parentNode.parentNode;\n      var tableArray = new Object();\n      tableArray = [];\n      for (var i = 0, row; (row = node.rows[i]); i++) {\n        tableArray[i] = [];\n        for (var j = 0, col; (col = row.cells[j]); j++) {\n          tableArray[i][j] = col.innerHTML;\n        }\n      }\n      return tableArray;\n    }\n    function insertRows(tableId, data, rows, columns, tableStyleClass) {\n      var table, columnNames, th;\n      table = document.getElementById(tableId);\n      columnNames = getTableColumnNamesById(tableId);\n      th = table.getElementsByTagName(\"th\");\n      while (table.rows[1]) table.deleteRow(1);\n\n      for (var i = 0; i < rows; i++) {\n        var newRow = table.getElementsByTagName(\"tbody\")[0].insertRow();\n        for (var j = 0; j < columns; j++) {\n          var newText = document.createTextNode(data[i][j]);\n          var newCell = newRow.insertCell(j);\n          newCell.appendChild(newText);\n        }\n      }\n\n      changeTableLayout(tableId, tableStyleClass);\n    }\n    function filterString(columnName, tableId, filterValue) {\n      var filter, table, tr, td, i, rowHeight, currentTableHeight;\n      filter = filterValue.toUpperCase();\n      table = document.getElementById(tableId);\n      tr = table.getElementsByTagName(\"tr\");\n      currentTableHeight = table.offsetHeight;\n      rowHeight = tr.length > 1 ? tr[1].offsetHeight : 0;\n      th = table.getElementsByTagName(\"th\");\n\n      for (i = 1; i < tr.length; i++) {\n        td = tr[i].getElementsByTagName(\"td\");\n        for (var j = 0; j < td.length; j++) {\n          var currentColumnName = th[j].innerHTML.trim().toUpperCase();\n          currentColumnName = currentColumnName.substr(\n            0,\n            currentColumnName.indexOf(\"<DIV\")\n          );\n\n          if (currentColumnName === columnName.toUpperCase().trim()) {\n            cell = tr[i].getElementsByTagName(\"td\")[j];\n            if (cell) {\n              if (!(cell.innerHTML.toUpperCase().indexOf(filter) > -1)) {\n                currentTableHeight = currentTableHeight - rowHeight;\n                table.style.height = currentTableHeight;\n                i--;\n                table.deleteRow(cell.parentNode.rowIndex);\n                break;\n              }\n            }\n          }\n        }\n      }\n    }\n    function filterNumericBiggerOrSmallerThan(\n      columnName,\n      tableId,\n      filterValue,\n      isBiggerThan\n    ) {\n      var filter, table, tr, td, i, rowHeight, currentTableHeight;\n      filter = filterValue.toUpperCase();\n      table = document.getElementById(tableId);\n      tr = table.getElementsByTagName(\"tr\");\n      currentTableHeight = table.offsetHeight;\n      rowHeight = tr.length > 1 ? tr[1].offsetHeight : 0;\n      th = table.getElementsByTagName(\"th\");\n\n      for (i = 1; i < tr.length; i++) {\n        td = tr[i].getElementsByTagName(\"td\");\n        for (var j = 0; j < td.length; j++) {\n          var currentColumnName = th[j].innerHTML.trim().toUpperCase();\n          currentColumnName = currentColumnName.substr(\n            0,\n            currentColumnName.indexOf(\"<DIV\")\n          );\n\n          if (currentColumnName === columnName.toUpperCase().trim()) {\n            cell = tr[i].getElementsByTagName(\"td\")[j];\n            if (cell) {\n              if (isBiggerThan) {\n                if (!(cell.innerHTML.toUpperCase() > filter)) {\n                  currentTableHeight = currentTableHeight - rowHeight;\n                  table.style.height = currentTableHeight;\n                  i--;\n                  table.deleteRow(cell.parentNode.rowIndex);\n                  break;\n                }\n              } else {\n                if (!(cell.innerHTML.toUpperCase() < filter)) {\n                  currentTableHeight = currentTableHeight - rowHeight;\n                  table.style.height = currentTableHeight;\n                  i--;\n                  table.deleteRow(cell.parentNode.rowIndex);\n                  break;\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n\n    function removeCssTableLayoutClasses(table) {\n      var td, tr, th;\n      td = table.getElementsByTagName(\"td\");\n      tr = table.getElementsByTagName(\"tr\");\n      th = table.getElementsByTagName(\"th\");\n\n      if (\n        table.classList.contains(\"default-table\") ||\n        table.classList.contains(\"defaultLayout\")\n      ) {\n        table.classList.remove(\"default-table\");\n        for (var i = 0; i < td.length; i++) {\n          td[i].classList.remove(\"default-table-data\");\n        }\n        for (var i = 0; i < th.length; i++) {\n          th[i].classList.remove(\"default-table-header\");\n        }\n      } else if (table.classList.contains(\"tableStyle\")) {\n        table.classList.remove(\"tableStyle\");\n        for (var i = 0; i < td.length; i++) {\n          td[i].classList.remove(\"tableStyle-data\");\n        }\n        for (var i = 0; i < tr.length; i++) {\n          tr[i].classList.remove(\"tableStyle-rows\");\n        }\n        for (var i = 0; i < th.length; i++) {\n          th[i].classList.remove(\"tableStyle-header\");\n        }\n      } else if (table.classList.contains(\"headerBorder\")) {\n        table.classList.remove(\"headerBorder\");\n        for (var i = 0; i < td.length; i++) {\n          td[i].classList.remove(\"headerBorder-data\");\n        }\n        for (var i = 0; i < th.length; i++) {\n          th[i].classList.remove(\"headerBorder-header\");\n        }\n      } else if (table.classList.contains(\"tableBorder\")) {\n        table.classList.remove(\"tableBorder\");\n        for (var i = 0; i < td.length; i++) {\n          td[i].classList.remove(\"tableBorder-data\");\n        }\n        for (var i = 0; i < th.length; i++) {\n          th[i].classList.remove(\"tableBorder-header\");\n        }\n      } else if (table.classList.contains(\"blackGrid\")) {\n        table.classList.remove(\"blackGrid\");\n        for (var i = 0; i < td.length; i++) {\n          td[i].classList.remove(\"blackGrid-data\");\n        }\n        for (var i = 0; i < th.length; i++) {\n          th[i].classList.remove(\"blackGrid-header\");\n        }\n      } else if (table.classList.contains(\"blueGrid\")) {\n        table.classList.remove(\"blueGrid\");\n        for (var i = 0; i < td.length; i++) {\n          td[i].classList.remove(\"blueGrid-data\");\n        }\n        for (var i = 0; i < th.length; i++) {\n          th[i].classList.remove(\"blueGrid-header\");\n        }\n      } else if (table.classList.contains(\"dzBank\")) {\n        table.classList.remove(\"dzBank\");\n        for (var i = 0; i < td.length; i++) {\n          td[i].classList.remove(\"dzBank-data\");\n        }\n        for (var i = 0; i < th.length; i++) {\n          th[i].classList.remove(\"dzBank-header\");\n        }\n      } else if (table.classList.contains(\"hqTrust\")) {\n        table.classList.remove(\"hqTrust\");\n        for (var i = 0; i < td.length; i++) {\n          td[i].classList.remove(\"hqTrust-data\");\n        }\n        for (var i = 0; i < tr.length; i++) {\n          tr[i].classList.remove(\"hqTrust-rows\");\n        }\n        for (var i = 0; i < th.length; i++) {\n          th[i].classList.remove(\"hqTrust-header\");\n        }\n      }\n    }\n    function changeTableLayout(tableId, layout) {\n      var td, tr, th;\n      var table = document.getElementById(tableId);\n      removeCssTableLayoutClasses(table);\n\n      td = table.getElementsByTagName(\"td\");\n      tr = table.getElementsByTagName(\"tr\");\n      th = table.getElementsByTagName(\"th\");\n\n      if (layout === \"defaultLayout\" || layout === \"default-table\") {\n        table.classList.add(\"default-table\");\n        for (var i = 0; i < td.length; i++) {\n          td[i].classList.add(\"default-table-data\");\n        }\n        for (var i = 0; i < th.length; i++) {\n          th[i].classList.add(\"default-table-header\");\n        }\n      } else if (layout === \"tableStyle\") {\n        table.classList.add(\"tableStyle\");\n        for (var i = 0; i < td.length; i++) {\n          td[i].classList.add(\"tableStyle-data\");\n        }\n        for (var i = 0; i < tr.length; i++) {\n          tr[i].classList.add(\"tableStyle-rows\");\n        }\n        for (var i = 0; i < th.length; i++) {\n          th[i].classList.add(\"tableStyle-header\");\n        }\n      } else if (layout === \"headerBorder\") {\n        table.classList.add(\"headerBorder\");\n        for (var i = 0; i < td.length; i++) {\n          td[i].classList.add(\"headerBorder-data\");\n        }\n        for (var i = 0; i < th.length; i++) {\n          th[i].classList.add(\"headerBorder-header\");\n        }\n      } else if (layout === \"tableBorder\") {\n        table.classList.add(\"tableBorder\");\n        for (var i = 0; i < td.length; i++) {\n          td[i].classList.add(\"tableBorder-data\");\n        }\n        for (var i = 0; i < th.length; i++) {\n          th[i].classList.add(\"tableBorder-header\");\n        }\n      } else if (layout === \"blackGrid\") {\n        table.classList.add(\"blackGrid\");\n        for (var i = 0; i < td.length; i++) {\n          td[i].classList.add(\"blackGrid-data\");\n        }\n        for (var i = 0; i < th.length; i++) {\n          th[i].classList.add(\"blackGrid-header\");\n        }\n      } else if (layout === \"blueGrid\") {\n        table.classList.add(\"blueGrid\");\n        for (var i = 0; i < td.length; i++) {\n          td[i].classList.add(\"blueGrid-data\");\n        }\n        for (var i = 0; i < th.length; i++) {\n          th[i].classList.add(\"blueGrid-header\");\n        }\n      } else if (layout === \"dzBank\") {\n        table.classList.add(\"dzBank\");\n        for (var i = 0; i < td.length; i++) {\n          td[i].classList.add(\"dzBank-data\");\n        }\n        for (var i = 0; i < th.length; i++) {\n          th[i].classList.add(\"dzBank-header\");\n        }\n      } else if (layout === \"hqTrust\") {\n        table.classList.add(\"hqTrust\");\n        for (var i = 0; i < td.length; i++) {\n          td[i].classList.add(\"hqTrust-data\");\n        }\n        for (var i = 0; i < tr.length; i++) {\n          tr[i].classList.add(\"hqTrust-rows\");\n        }\n        for (var i = 0; i < th.length; i++) {\n          th[i].classList.add(\"hqTrust-header\");\n        }\n      }\n    }\n    function removeCssPositionClasses(table) {\n      if (table.classList.contains(\"rightAlignTable\")) {\n        table.classList.remove(\"rightAlignTable\");\n      }\n      if (table.classList.contains(\"centerAlignTable\")) {\n        table.classList.remove(\"centerAlignTable\");\n      }\n      if (table.classList.contains(\"leftAlignTable\")) {\n        table.classList.remove(\"leftAlignTable\");\n      }\n    }\n    function setTablePositionRight(tableId) {\n      var table = document.getElementById(tableId);\n      removeCssPositionClasses(table);\n      table.classList.add(\"rightAlignTable\");\n    }\n    function setTablePositionCenter(tableId) {\n      var table = document.getElementById(tableId);\n      removeCssPositionClasses(table);\n      table.classList.add(\"centerAlignTable\");\n    }\n\n    function setTablePositionLeft(tableId) {\n      var table = document.getElementById(tableId);\n      removeCssPositionClasses(table);\n      table.classList.add(\"leftAlignTable\");\n    }\n    function getAllTablesInDocument() {\n      return document.getElementsByTagName(\"table\");\n    }\n  </script>
+    \n\n
+    <script>\n    function init() { } \n\n    $(function () { \n      $(\"#resizableImage\").resizable();\n      $(\"#resizableImage1\").resizable();\n      $(\"#resizableImage2\").resizable();\n      $(\"#resizableImage3\").resizable();\n      $(\"#resizableImage4\").resizable();\n      $(\"#resizableImage5\").resizable();\n      $(\"#resizableImage6\").resizable();\n      $(\"#resizableImage7\").resizable();\n      $(\"#resizableImage8\").resizable();\n      $(\"#resizableImage9\").resizable();\n      $(\"#resizableImage10\").resizable();\n\n      $(\"th\").resizable();\n      $(\"table\").resizable();\n    });\n  </script>
+    \n\n
+    <link rel=\"stylesheet\" href=\"https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css\">\n\n <style>
+        \n .fontsize6 {
+            \n font-size: 11px;
+            \n
+        }
+
+        \n\n
+
+        /* #JFX_GEN_FONT_SIZE_6  */
+        \n .fontsize7 {
+            \n font-size: 13px;
+            \n
+        }
+
+        \n\n .fontsize8 {
+            \n font-size: 15px;
+            \n
+        }
+
+        \n\n .fontsize9 {
+            \n font-size: 16px;
+            \n
+        }
+
+        \n\n .fontsize10 {
+            \n font-size: 18px;
+            \n
+        }
+
+        \n\n .fontsize11 {
+            \n font-size: 20px;
+            \n
+        }
+
+        \n\n .fontsize12 {
+            \n font-size: 22px;
+            \n
+        }
+
+        \n\n .fontsize14 {
+            \n font-size: 25px;
+            \n
+        }
+
+        \n\n .fontsize16 {
+            \n font-size: 29px;
+            \n
+        }
+
+        \n\n .fontsize18 {
+            \n font-size: 33px;
+            \n
+        }
+
+        \n\n .fontsize20 {
+            \n font-size: 36px;
+            \n
+        }
+
+        \n\n .fontsize22 {
+            \n font-size: 40px;
+            \n
+        }
+
+        \n\n .fontsize24 {
+            \n font-size: 44px;
+            \n
+        }
+
+        \n\n .fontsize26 {
+            \n font-size: 47px;
+            \n
+        }
+
+        \n\n .fontsize28 {
+            \n font-size: 51px;
+            \n
+        }
+
+        \n\n .fontsize36 {
+            \n font-size: 65px;
+            \n
+        }
+
+        \n\n .fontsize48 {
+            \n font-size: 87px;
+            \n
+        }
+
+        \n\n .fontsize72 {
+            \n font-size: 131px;
+            \n
+        }
+
+        \n\n [contenteditable]:focus {
+            \n outline: 0px solid transparent;
+            \n
+        }
+
+        \n\n :root {
+            \n
+            /** 12pt * 1,33333 *  100/95(DPI Default) * 126 (DPI Scrren) * 1,02 (Correction) **/
+            \n
+        }
+
+        \n\n html {
+            \n
+            /* to be changed by java fx taking dpi of screen into account */
+            \n
+            /* example: 100/95(DPI Default) * 126 (DPI Scrren) * 1,02 (Correction) */
+            \n
+            /*font-size: 135.2842105%; */
+            \n
+        }
+
+        \n\n body {
+            \n font-family: \"Arial\";
+            \n
+            /* #JFX_GEN_FONT_TYPE_ARIAL */
+            \n font-size: 20px;
+            \n overflow-x: scroll;
+            \n
+            /* scroll */
+            \n overflow-y: scroll;
+            \n
+            /* scroll */
+            \n
+        }
+
+        \n\n div.content {
+            \n width: 900px;
+            \n
+            /** real page without margins set by java fx */
+            \n min-height: 900px;
+            \n
+            /** real page without margins set by java fx */
+            \n margin-left: 0px;
+            \n margin-right: 0px;
+            \n margin-top: 0px;
+            \n margin-bottom: 0px;
+            \n display: block;
+            \n background-color: white;
+            \n overflow: hidden;
+            \n
+        }
+
+        \n\n div.page {
+            \n width: 900px;
+            \n
+            /* to be set by java fx */
+            \n border: 1px dotted lightgrey;
+            \n display: block;
+            \n overflow: hidden;
+            \n
+        }
+
+        \n\n div.margin {
+            \n width: 900px;
+            \n
+            /** set total (e.g. A4) with Java FX */
+            \n min-width: 900px;
+            \n display: block;
+            \n background-color: white;
+            \n overflow: hidden;
+            \n
+        }
+
+        \n\n div.flexible {
+            \n display: flexibel;
+            \n justify-content: center;
+            \n align-items: center;
+            \n background-color: transparent;
+            \n
+        }
+
+        \n
+    </style>\n\n <style>
+        \n tr:nth-child(even) {
+            \n background-color: #f2f2f2;
+            \n
+        }
+
+        \n\n .default-table-data {
+            \n border: solid 1px #b4b4b4;
+            \n
+        }
+
+        \n\n .default-table-header {
+            \n border: 1px solid #b4b4b4;
+            \n text-align: left;
+            \n background-color: #f2f2f2;
+            \n color: #3c3c3c;
+            \n
+        }
+
+        \n\n .default-table {
+            \n border-collapse: collapse;
+            \n width: 40%;
+            \n
+        }
+
+        \n\n .tableStyle {
+            \n border-collapse: collapse;
+            \n width: 40%;
+            \n
+        }
+
+        \n\n .tableStyle-rows {
+            \n background-color: white;
+            \n
+        }
+
+        \n\n .tableStyle-data {
+            \n background-color: white;
+            \n border-bottom: 1px solid #ddd;
+            \n
+        }
+
+        \n\n .tableStyle-header {
+            \n text-align: left;
+            \n background-color: white;
+            \n border-bottom: 1px solid #ddd;
+            \n color: #3c3c3c;
+            \n
+        }
+
+        \n\n .headerBorder {
+            \n border-collapse: collapse;
+            \n width: 40%;
+            \n
+        }
+
+        \n\n .headerBorder-header {
+            \n text-align: left;
+            \n padding-left: 15px;
+            \n color: #3c3c3c;
+            \n
+        }
+
+        \n\n .headerBorder td {
+            \n padding-left: 15px;
+            \n height: 35px;
+            \n
+        }
+
+        \n\n .headerBorder tr:nth-child(even) {
+            \n background-color: #f7f7f7;
+            \n
+        }
+
+        \n\n .tableBorder {
+            \n border-collapse: collapse;
+            \n\n width: 40%;
+            \n
+        }
+
+        \n\n .tableBorder-data {
+            \n border: 1px solid #ddd;
+            \n
+        }
+
+        \n\n .tableBorder-header {
+            \n text-align: left;
+            \n color: #3c3c3c;
+            \n border: 1px solid #ddd;
+            \n
+        }
+
+        \n\n .blackGrid {
+            \n border-collapse: collapse;
+            \n width: 40%;
+            \n
+        }
+
+        \n\n .blackGrid tr:nth-child(odd) {
+            \n background-color: #999999;
+            \n
+        }
+
+        \n\n .blackGrid tr:nth-child(even) {
+            \n background-color: #cccccc;
+            \n
+        }
+
+        \n\n .blackGrid-header {
+            \n text-align: left;
+            \n color: white;
+            \n background-color: black;
+            \n border-left: 1px solid black;
+            \n border-bottom: 1px solid white;
+            \n
+        }
+
+        \n\n .blackGrid-data {
+            \n border-bottom: 1px solid white;
+            \n border-right: 1px solid white;
+            \n
+        }
+
+        \n\n .blackGrid-data:nth-of-type(1) {
+            \n background-color: black;
+            \n color: white;
+            \n
+        }
+
+        \n\n .blueGrid {
+            \n border-collapse: collapse;
+            \n\n width: 40%;
+            \n
+        }
+
+        \n\n .blueGrid tr:nth-child(odd) {
+            \n background-color: #deeaf6;
+            \n
+        }
+
+        \n\n .blueGrid tr:nth-child(even) {
+            \n background-color: white;
+            \n
+        }
+
+        \n\n .blueGrid-header {
+            \n text-align: left;
+            \n color: white;
+            \n background-color: #0265b1;
+            \n border: 1px solid #9cc2e5;
+            \n
+        }
+
+        \n\n .blueGrid-data {
+            \n border: 1px solid #9cc2e5;
+            \n
+        }
+
+        \n\n .dzBank {
+            \n border-collapse: collapse;
+            \n width: 40%;
+            \n
+        }
+
+        \n\n .dzBank tr:nth-child(even) {
+            \n background-color: white;
+            \n
+        }
+
+        \n\n .dzBank-header {
+            \n text-align: left;
+            \n color: white;
+            \n background-color: #f08200;
+            \n
+        }
+
+        \n\n .dzBank-data {
+            \n border-top: 1px solid #707172;
+            \n border-bottom: 1px solid #707172;
+            \n color: #707172;
+            \n
+        }
+
+        \n\n .dzBank-data:nth-of-type(1) {
+            \n font-weight: bold;
+            \n color: black;
+            \n
+        }
+
+        \n\n .dzBank-data:nth-of-type(2) {
+            \n background-color: #f2f2f2;
+            \n color: #707172;
+            \n
+        }
+
+        \n\n .dzBank>tbody>tr:nth-last-child(2)>td {
+            \n border-bottom: none;
+            \n
+        }
+
+        \n\n .hqTrust {
+            \n border-collapse: collapse;
+            \n width: 40%;
+            \n
+        }
+
+        \n\n .hqTrust-rows {
+            \n background-color: white;
+            \n
+        }
+
+        \n\n .hqTrust-data {
+            \n background-color: white;
+            \n border-bottom: 1px solid rgb(0, 0, 0);
+            \n
+        }
+
+        \n\n .hqTrust-header {
+            \n text-align: left;
+            \n background-color: white;
+            \n border-bottom: 1px solid rgb(0, 0, 0);
+            \n border-top: 2px solid #092b5a;
+            \n color: #092b5a;
+            \n
+        }
+
+        \n\n .hqTrust>tbody>tr:nth-last-child(1)>td {
+            \n border-bottom: 2px solid #092b5a;
+            \n
+        }
+
+        \n\n .centerAlignTable {
+            \n margin: 0px auto;
+            \n
+        }
+
+        \n\n .rightAlignTable {
+            \n margin-right: 0px;
+            \n margin-left: auto;
+            \n
+        }
+
+        \n\n .leftAlignTable {
+            \n margin-right: auto;
+            \n margin-left: 0px;
+            \n
+        }
+
+        \n\n .ui-icon,
+        \n .ui-widget-content .ui-icon {
+            \n background-image: none;
+            \n
+        }
+
+        \n
+    </style>\n
+</head>\n\n
+
+<body onload=\"initEditor() \" contenteditable=\"true\" style=\"width: 1174px; min-width: 1174px;\">\n <div
+        id=\"flexible\" class=\"flexible\" contenteditable=\"true\">\n <div id=\"margin\" class=\"margin\"
+            contenteditable=\"true\">\n <div id=\"page\" class=\"page\" contenteditable=\"true\" style=\"width:
+                875px;\">\n <div id=\"content\" class=\"content\" contenteditable=\"true\" style=\"width: 875px;
+                    min-width: 875px; max-width: 875px; min-height: 1296px;\">\n \n <br>\n <font color=\"#003333\">
+                        Manyofourcurrentstrugglesoriginatefromourslowlybuildupneglect.thisneglectcanseemasamustdotobetterconcentrateonotherworldlymatters,aswellasaninabilitytoreactduetoundeveloped
+                    </font>
+                    <font color=\"#ff0000\">behaviours.</font>
+                </div>
+                <div id=\"content\" class=\"content\" contenteditable=\"true\" style=\"width: 875px; min-width: 875px;
+                    max-width: 875px; min-height: 1296px;\"><br></div>
+                <div id=\"content\" class=\"content\" contenteditable=\"true\" style=\"width: 875px; min-width: 875px;
+                    max-width: 875px; min-height: 1296px;\"><br></div>\n
+            </div>\n </div>\n </div>\n\n\n\n</body>
+
+</html>"

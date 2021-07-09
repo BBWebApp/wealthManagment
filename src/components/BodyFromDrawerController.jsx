@@ -8,13 +8,14 @@ import { getReportHtml } from "../redux/ducks/serverCall";
 
 const BodyFromDrawerController = (props) => {
   const { reportId } = props;
+  const { packageId } = props;
   const { content } = props;
   const [xmlResult, setxmlResult] = useState(undefined);
   const dispatch = useDispatch();
 
   useEffect(() => {
     content[reportId] !== undefined && setxmlResult(content[reportId]);
-    dispatch(getReportHtml(reportId));
+    dispatch(getReportHtml(reportId, packageId));
   }, []);
 
   var reportId_html_flag = useSelector((state) => {

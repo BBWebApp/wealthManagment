@@ -8,13 +8,17 @@ const useStyles = makeStyles({});
 const ReportChart = (props) => {
   const { xmlResult } = props;
   const { reportId } = props;
+  const { order } = props;
   const [text, setText] = useState();
   const [resizedText, setResizedText] = useState();
   const [Xml, setXml] = useState(undefined);
 
   var html = useSelector((state) => {
-    return state.serverCall.html;
+    var temp = state.serverCall.html;
+    var chart = temp[order]["Chart"];
+    return chart;
   }); // state.reducer.stateName
+
   const imageToDataUri = (width, height) => {
     var img_temp = new Image();
     img_temp.src = text;

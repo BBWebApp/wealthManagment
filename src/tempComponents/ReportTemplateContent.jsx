@@ -3,6 +3,7 @@ import { Typography, makeStyles } from "@material-ui/core";
 import ReportTable from "./ReportTable";
 import ReportText from "./ReportText";
 import ReportChart from "./ReportChart";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles({
   report_content: {
@@ -26,13 +27,23 @@ const ReportTemplateContent = (props) => {
   return (
     xmlResult !== undefined && (
       <div className={classes.report_content}>
-        {xmlResult[0].map((item) => {
+        {xmlResult[0].map((item, index) => {
           return item.$.type === "table" ? (
-            <ReportTable key={reportId} xmlResult={item} />
+            <ReportTable key={reportId} xmlResult={item} order={index} />
           ) : item.$.type === "text" ? (
-            <ReportText key={reportId} reportId={reportId} xmlResult={item} />
+            <ReportText
+              key={reportId}
+              reportId={reportId}
+              xmlResult={item}
+              order={index}
+            />
           ) : item.$.type === "chart" ? (
-            <ReportChart key={reportId} reportId={reportId} xmlResult={item} />
+            <ReportChart
+              key={reportId}
+              reportId={reportId}
+              xmlResult={item}
+              order={index}
+            />
           ) : (
             <div>WTFFF</div>
           );

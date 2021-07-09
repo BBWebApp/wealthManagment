@@ -16,20 +16,20 @@ const useStyles = makeStyles({
 const ContentController = (props) => {
   const classes = useStyles();
   const { content } = props;
- 
   return (
     <div className={classes.content}>
       <Switch>
         <Redirect exact from="/" to="/home" />
         <Route
           exact
-          path="/Reports/:reportId"
+          path="/:package/:reportId"
           render={(props) => (
             // usage of key to rerender the component everytime the key changes
             <BodyFromDrawerController
               key={props.match.params.reportId}
               content={content}
               reportId={props.match.params.reportId}
+              packageId={props.match.params.package}
             />
           )}
         />

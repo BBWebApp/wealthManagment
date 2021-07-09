@@ -60,12 +60,99 @@ const Drawer = (props) => {
       setFavsNames(favReportsNames);
     }
   }, [screenShots]);
-  const [open, setOpen] = useState(true);
+  const [openedPackageTree, setOpenedPackageTree] = useState([]);
 
-  const handleClick = () => {
-    setOpen(!open);
+  const arraysEqual = (a, b) => {
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (a.length !== b.length) return false;
+
+    // If you don't care about the order of the elements inside
+    // the array, you should sort both arrays here.
+    // Please note that calling sort on an array will modify that array.
+    // you might want to clone your array first.
+
+    for (var i = 0; i < a.length; ++i) {
+      if (a[i] !== b[i]) return false;
+    }
+    return true;
+  };
+  const handleClick = (packageTree, packageInFocus) => {
+    var packageTreeArray = packageTree.split("-.-");
+    if (arraysEqual(packageTreeArray, openedPackageTree)) {
+      var pckFocusIndex = packageTreeArray.indexOf(packageInFocus);
+      if (pckFocusIndex !== -1)
+        setOpenedPackageTree(packageTreeArray.slice(0, pckFocusIndex));
+      else setOpenedPackageTree([""]);
+    } else if (
+      arraysEqual(packageTreeArray, [packageInFocus]) &&
+      openedPackageTree.includes(packageInFocus)
+    ) {
+      setOpenedPackageTree(
+        packageTreeArray.slice(0, openedPackageTree.indexOf(packageInFocus))
+      );
+    } else {
+      setOpenedPackageTree(packageTreeArray);
+    }
   };
 
+  const getDrawerView = (categoryObject, parentKey) => {
+    return Object.keys(categoryObject).map((key, index) => (
+      <>
+        <ListItem
+          className={classes.root}
+          button
+          onClick={
+            parentKey !== undefined
+              ? () => handleClick(parentKey + "-.-" + key, key)
+              : () => handleClick(key, key)
+          }
+        >
+          <ListItemIcon>
+            <InboxIcon />
+          </ListItemIcon>
+          <ListItemText primary={key} />
+          {openedPackageTree === key ? <ExpandLess /> : <ExpandMore />}
+        </ListItem>
+        <Collapse
+          in={openedPackageTree.includes(key)}
+          timeout="auto"
+          unmountOnExit
+        >
+          <List component="div" disablePadding>
+            {Object.keys(categoryObject[key]).map((categoryOrItem) => {
+              if (categoryOrItem === "0") {
+                return categoryObject[key].map((item) => {
+                  return (
+                    <ListItem
+                      button
+                      className={classes.nested}
+                      onClick={() => history.push(`/${key}/` + item)}
+                      key={item}
+                    >
+                      <ListItemIcon>
+                        {favsNames && favsNames.includes(item) ? (
+                          <StarIcon style={{ color: "#ed9a0d" }} />
+                        ) : (
+                          <StarBorder />
+                        )}
+                      </ListItemIcon>
+                      <ListItemText primary={item} />
+                    </ListItem>
+                  );
+                });
+              } else {
+                var newCategory = {};
+                newCategory[categoryOrItem] =
+                  categoryObject[key][categoryOrItem];
+                return getDrawerView(newCategory, key);
+              }
+            })}
+          </List>
+        </Collapse>
+      </>
+    ));
+  };
   return drawer !== undefined ? (
     <WMDrawer
       elevation={2}
@@ -93,41 +180,7 @@ const Drawer = (props) => {
           style={{ marginBottom: "3px", marginTop: "3px" }}
         />
 
-        {Object.keys(drawer).map((key) => (
-          <>
-            <ListItem className={classes.root} button onClick={handleClick}>
-              <ListItemIcon>
-                <InboxIcon />
-              </ListItemIcon>
-              <ListItemText primary={key} />
-              {open ? <ExpandLess /> : <ExpandMore />}
-            </ListItem>
-
-            <Collapse in={open} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
-                {drawer[key].map((item) => {
-                  return (
-                    <ListItem
-                      button
-                      className={classes.nested}
-                      onClick={() => history.push(`/${key}/` + item)}
-                      key={item}
-                    >
-                      <ListItemIcon>
-                        {favsNames && favsNames.includes(item) ? (
-                          <StarIcon style={{ color: "#ed9a0d" }} />
-                        ) : (
-                          <StarBorder />
-                        )}
-                      </ListItemIcon>
-                      <ListItemText primary={item} />
-                    </ListItem>
-                  );
-                })}
-              </List>
-            </Collapse>
-          </>
-        ))}
+        {getDrawerView(drawer)}
       </List>
     </WMDrawer>
   ) : (

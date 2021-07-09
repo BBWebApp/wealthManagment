@@ -12,8 +12,10 @@ export function requestServerCall(action) {
       return axios.post(dispatch_types_urls["GET_XML"]);
     case "GET_REPORT_HTML":
       var reportId = action["reportId_html_flag"];
+      var packageId = action["packageId"];
       return axios.post(dispatch_types_urls["GET_REPORT_HTML"], {
         reportId: reportId,
+        packageId: packageId,
       });
 
     default:

@@ -16,7 +16,22 @@ export function* handleServerCall(action) {
         var reportId = action["reportId_html_flag"];
         var response = yield call(requestServerCall, action);
         var html = response.data;
-        yield put(setReportHtml(html, reportId));
+        var htmlArray = html.split("[{").splice(1);
+        var htmlArraySize = htmlArray.length - 1;
+        var reportComponents = [];
+        htmlArray.map((item, index) => {
+          if (index === htmlArraySize) {
+            item = item.substring(0, item.length - 3);
+          } else {
+            item = item.substring(0, item.length - 4);
+          }
+          var key = item.substring(0, item.indexOf("="));
+          var value = item.substring(item.indexOf("=") + 1);
+          var component = {};
+          component[key] = value;
+          reportComponents.push(component);
+        });
+        yield put(setReportHtml(reportComponents, reportId));
         break;
       default:
         break;
