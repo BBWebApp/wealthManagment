@@ -5,7 +5,8 @@ import { makeStyles } from "@material-ui/core";
 import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import BodyFromDrawerController from "./BodyFromDrawerController";
-
+import { useLocation } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 const useStyles = makeStyles({
   content: {
     marginLeft: "240px",
@@ -16,25 +17,30 @@ const useStyles = makeStyles({
 const ContentController = (props) => {
   const classes = useStyles();
   const { content } = props;
+
+  const location = useLocation();
+  const urlPath = location.pathname;
+  const reportId = urlPath.split("/")[urlPath.split("/").length - 1];
+  const packageId = urlPath.split("/").slice(1, urlPath.split("/").length - 1);
   return (
     <div className={classes.content}>
       <Switch>
         <Redirect exact from="/" to="/home" />
+        <Route exact path="/Charts" render={(props) => <Chart />} />
+        <Route exact path={["/", "/home"]} render={(props) => <Welcome />} />
         <Route
           exact
-          path="/:package/:reportId"
+          path={urlPath}
           render={(props) => (
             // usage of key to rerender the component everytime the key changes
             <BodyFromDrawerController
-              key={props.match.params.reportId}
+              key={urlPath}
               content={content}
-              reportId={props.match.params.reportId}
-              packageId={props.match.params.package}
+              reportId={reportId}
+              packageId={packageId}
             />
           )}
         />
-        <Route exact path="/Charts" render={(props) => <Chart />} />
-        <Route exact path={["/", "/home"]} render={(props) => <Welcome />} />
       </Switch>
     </div>
   );

@@ -18,7 +18,78 @@ const options = {
   tagNameProcessors: [stripNS],
   explicitArray: false,
 };
+const traversePackageTree = (packageExplorer, drawerObj) => {
+  var packageCateogryReportName;
+  Object.keys(packageExplorer).map((packageItemsOrCategories) => {
+    switch (packageItemsOrCategories) {
+      case "$":
+        packageCateogryReportName =
+          packageExplorer[packageItemsOrCategories].name;
+        drawerObj[packageCateogryReportName] = new Array();
+        break;
+      case "item":
+        drawerObj[packageCateogryReportName].push(
+          packageExplorer[packageItemsOrCategories].$.name
+        );
+        break;
+      case "category":
+        if (Array.isArray(packageExplorer[packageItemsOrCategories])) {
+          packageExplorer[packageItemsOrCategories].map((singleCategory) => {
+            traversePackageTree(
+              singleCategory,
+              drawerObj[packageCateogryReportName]
+            );
+          });
+        } else {
+          traversePackageTree(
+            packageExplorer[packageItemsOrCategories],
+            drawerObj[packageCateogryReportName]
+          );
+        }
 
+        break;
+      default:
+        break;
+    }
+  });
+};
+const traverseReportContents = (packageExplorer, contentObj) => {
+  var packageCateogryReportName;
+  Object.keys(packageExplorer).map((packageItemsOrCategories) => {
+    switch (packageItemsOrCategories) {
+      case "$":
+        packageCateogryReportName =
+          packageExplorer[packageItemsOrCategories].name;
+        contentObj[packageCateogryReportName] = new Array();
+        break;
+      case "item":
+        var itemName = packageExplorer[packageItemsOrCategories].$.name;
+        contentObj[packageCateogryReportName][itemName] = new Array();
+        contentObj[packageCateogryReportName][itemName].push(
+          packageExplorer[packageItemsOrCategories].component
+        );
+        break;
+      case "category":
+        if (Array.isArray(packageExplorer[packageItemsOrCategories])) {
+          packageExplorer[packageItemsOrCategories].map((singleCategory) => {
+            traverseReportContents(
+              singleCategory,
+              contentObj[packageCateogryReportName]
+            );
+          });
+        } else {
+          traverseReportContents(
+            packageExplorer[packageItemsOrCategories],
+            contentObj[packageCateogryReportName]
+          );
+        }
+
+        break;
+      default:
+        break;
+    }
+  });
+};
 const AppStructureController = ({ appXml }) => {
   const [Xml, setXml] = useState();
   const [HeaderStructure, setHeaderStructure] = useState();
@@ -29,54 +100,18 @@ const AppStructureController = ({ appXml }) => {
   var drawerObj = {};
   var ContentObj = {};
 
-  const traverseNode = (packageExplorer, drawerObj) => {
-    var packageCateogryReportName;
-    Object.keys(packageExplorer).map((packageItemsOrCategories) => {
-      switch (packageItemsOrCategories) {
-        case "$":
-          packageCateogryReportName =
-            packageExplorer[packageItemsOrCategories].name;
-          drawerObj[packageCateogryReportName] = new Array();
-          break;
-        case "item":
-          drawerObj[packageCateogryReportName].push(
-            packageExplorer[packageItemsOrCategories].$.name
-          );
-          break;
-        case "category":
-          if (Array.isArray(packageExplorer[packageItemsOrCategories])) {
-            packageExplorer[packageItemsOrCategories].map((singleCategory) => {
-              traverseNode(
-                singleCategory,
-                drawerObj[packageCateogryReportName]
-              );
-            });
-          } else {
-            traverseNode(
-              packageExplorer[packageItemsOrCategories],
-              drawerObj[packageCateogryReportName]
-            );
-          }
-
-          break;
-        default:
-          break;
-      }
-    });
-  };
-
   const parseHeader = (Xml) => {};
   const parseDrawer = (Xml) => {
     Xml["navigation"]["category"].map((single) => {
       var packageExplorer = single;
-      traverseNode(packageExplorer, drawerObj);
+      traversePackageTree(packageExplorer, drawerObj);
     });
     setDrawerStructure(drawerObj);
   };
   const parseContent = (Xml) => {
     Xml["navigation"]["category"].map((single) => {
       var packageExplorer = single;
-      traverseNode(packageExplorer, ContentObj);
+      traverseReportContents(packageExplorer, ContentObj);
     });
 
     setContentStructure(ContentObj);
@@ -91,8 +126,7 @@ const AppStructureController = ({ appXml }) => {
     Xml !== undefined && parseContent(Xml);
   }, [Xml]);
 
-  // && ContentStructure !== undefined ?
-  return Xml !== undefined ? (
+  return Xml !== undefined && ContentStructure !== undefined ? (
     <React.Fragment>
       <Header header={HeaderStructure} />
       <Drawer drawer={DrawerStructure} />

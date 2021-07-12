@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <navigation>
     <category name="Defaults">
-
         <category name="DZBank">
             <item name="EOD-internalGoods">
                 <component type="text" />
+                <component type="chart" />
             </item>
+            <category name="Sales">
+                <item name="internals">
+                    <component type="text" />
+                </item>
+            </category>
         </category>
+
         <category name="Financials">
             <item name="eod-outsidersContribution">
                 <component type="text" />

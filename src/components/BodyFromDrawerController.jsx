@@ -6,15 +6,25 @@ import ReportTemplatePage from "../tempComponents/ReportTemplatePage";
 import { useSelector, useDispatch } from "react-redux";
 import { getReportHtml } from "../redux/ducks/serverCall";
 
+const getReportComponents = (content, packageIds, reportId) => {
+  for (let index = 0; index < packageIds.length; index++) {
+    const packageName = packageIds[index];
+    content = content[packageName];
+  }
+  return content[reportId];
+};
+
 const BodyFromDrawerController = (props) => {
   const { reportId } = props;
   const { packageId } = props;
-  const content = { Defaults: { here: ["text"] } };
+  const { content } = props;
   const [xmlResult, setxmlResult] = useState(undefined);
+
+  var reportComponents = getReportComponents(content, packageId, reportId);
+
   const dispatch = useDispatch();
   useEffect(() => {
-    content[packageId][reportId] !== undefined &&
-      setxmlResult(content[packageId][reportId]);
+    reportComponents !== undefined && setxmlResult(reportComponents);
     dispatch(getReportHtml(reportId, packageId));
   }, []);
 
@@ -23,7 +33,7 @@ const BodyFromDrawerController = (props) => {
   }); // state.reducer.stateName
   var reportContent;
   if (
-    content[packageId][reportId] !== undefined &&
+    reportComponents !== undefined &&
     xmlResult !== undefined &&
     reportId_html_flag === reportId
   ) {

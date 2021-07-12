@@ -30,8 +30,6 @@ const ReportText = (props) => {
           if (Object.keys(child).includes("props")) {
             if (Object.keys(child.props).includes("id")) {
               if (child.props.id === "content") {
-                console.log(child.props.children);
-
                 setText(
                   ReactDOMServer.renderToStaticMarkup(child.props.children)
                 );

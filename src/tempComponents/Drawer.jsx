@@ -72,7 +72,7 @@ const Drawer = (props) => {
     // Please note that calling sort on an array will modify that array.
     // you might want to clone your array first.
 
-    for (var i = 0; i < a.length; ++i) {
+    for (var i = 0; i < a.length; i++) {
       if (a[i] !== b[i]) return false;
     }
     return true;
@@ -85,7 +85,7 @@ const Drawer = (props) => {
         setOpenedPackageTree(packageTreeArray.slice(0, pckFocusIndex));
       else setOpenedPackageTree([""]);
     } else if (
-      arraysEqual(packageTreeArray, [packageInFocus]) &&
+      packageTreeArray.includes(packageInFocus) &&
       openedPackageTree.includes(packageInFocus)
     ) {
       setOpenedPackageTree(
@@ -127,7 +127,7 @@ const Drawer = (props) => {
                     <ListItem
                       button
                       className={classes.nested}
-                      onClick={() => history.push(`/${key}/` + item)}
+                      onClick={() => history.push(`/Defaults/${key}/` + item)}
                       key={item}
                     >
                       <ListItemIcon>
@@ -143,9 +143,14 @@ const Drawer = (props) => {
                 });
               } else {
                 var newCategory = {};
+
                 newCategory[categoryOrItem] =
                   categoryObject[key][categoryOrItem];
-                return getDrawerView(newCategory, key);
+                if (parentKey === undefined)
+                  return getDrawerView(newCategory, key);
+                else {
+                  return getDrawerView(newCategory, parentKey + "-.-" + key);
+                }
               }
             })}
           </List>
