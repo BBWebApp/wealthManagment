@@ -25,7 +25,9 @@ const AppStructureController = ({ appXml }) => {
   const [DrawerStructure, setDrawerStructure] = useState();
   const [ContentStructure, setContentStructure] = useState();
   const dispatch = useDispatch();
+
   var drawerObj = {};
+  var ContentObj = {};
 
   const traverseNode = (packageExplorer, drawerObj) => {
     var packageCateogryReportName;
@@ -70,25 +72,11 @@ const AppStructureController = ({ appXml }) => {
       traverseNode(packageExplorer, drawerObj);
     });
     setDrawerStructure(drawerObj);
-    // Object.keys(Xml["navigation"]["category"]).map((single) => {
-    //   var categoryName = Xml.navigation.category[single].$.name;
-    //   drawerObj[categoryName] = new Array();
-    //   Xml.navigation.category[single].item.map((items) => {
-    //     drawerObj[categoryName].push(items.$.name);
-    //   });
-    // });
-    // console.log(drawerObj);
   };
   const parseContent = (Xml) => {
-    var ContentObj = {};
-    Object.keys(Xml["navigation"]["category"]).map((single) => {
-      Xml.navigation.category[single].item.map((items) => {
-        if (items.component !== undefined) {
-          var categoryName = items.$.name;
-          ContentObj[categoryName] = new Array();
-          ContentObj[items.$.name].push(items.component);
-        }
-      });
+    Xml["navigation"]["category"].map((single) => {
+      var packageExplorer = single;
+      traverseNode(packageExplorer, ContentObj);
     });
 
     setContentStructure(ContentObj);
@@ -100,7 +88,7 @@ const AppStructureController = ({ appXml }) => {
     });
     Xml !== undefined && parseHeader(Xml);
     Xml !== undefined && parseDrawer(Xml);
-    // Xml !== undefined && parseContent(Xml);
+    Xml !== undefined && parseContent(Xml);
   }, [Xml]);
 
   // && ContentStructure !== undefined ?
@@ -108,7 +96,7 @@ const AppStructureController = ({ appXml }) => {
     <React.Fragment>
       <Header header={HeaderStructure} />
       <Drawer drawer={DrawerStructure} />
-      {/* <ContentController content={ContentStructure} /> */}
+      <ContentController content={ContentStructure} />
     </React.Fragment>
   ) : (
     <React.Fragment>

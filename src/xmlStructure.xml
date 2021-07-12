@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <navigation>
     <category name="Defaults">
-        <category name="Spirit">
-            <item name="yearning">
+
+        <category name="DZBank">
+            <item name="EOD-internalGoods">
                 <component type="text" />
             </item>
         </category>
-
-        <item name="asdasd">
+        <category name="Financials">
+            <item name="eod-outsidersContribution">
+                <component type="text" />
+            </item>
+        </category>
+        <item name="here">
             <component type="text" />
+            <component type="chart" />
         </item>
     </category>
 
 
     <category name="Soul">
-        <category name="Spirit">
-            <item name="yearning">
-                <component type="text" />
-            </item>
-        </category>
-
+        <item name="spirit">
+            <component type="text" />
+        </item>
     </category>
 </navigation>
