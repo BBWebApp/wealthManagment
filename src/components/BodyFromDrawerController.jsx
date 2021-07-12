@@ -9,12 +9,12 @@ import { getReportHtml } from "../redux/ducks/serverCall";
 const BodyFromDrawerController = (props) => {
   const { reportId } = props;
   const { packageId } = props;
-  const { content } = props;
+  const content = { Defaults: { here: ["text"] } };
   const [xmlResult, setxmlResult] = useState(undefined);
   const dispatch = useDispatch();
-
   useEffect(() => {
-    content[reportId] !== undefined && setxmlResult(content[reportId]);
+    content[packageId][reportId] !== undefined &&
+      setxmlResult(content[packageId][reportId]);
     dispatch(getReportHtml(reportId, packageId));
   }, []);
 
@@ -23,12 +23,16 @@ const BodyFromDrawerController = (props) => {
   }); // state.reducer.stateName
   var reportContent;
   if (
-    content[reportId] !== undefined &&
+    content[packageId][reportId] !== undefined &&
     xmlResult !== undefined &&
     reportId_html_flag === reportId
   ) {
     reportContent = (
-      <ReportTemplatePage reportId={reportId} xmlResult={xmlResult} />
+      <ReportTemplatePage
+        reportId={reportId}
+        packageId={packageId}
+        xmlResult={xmlResult}
+      />
     );
   } else if (content[reportId] === undefined) {
     reportContent = <Report key={reportId} reportId={reportId} />;

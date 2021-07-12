@@ -15,6 +15,8 @@ const useStyles = makeStyles({});
 const ReportTemplatePage = (props) => {
   const { xmlResult } = props;
   const { reportId } = props;
+  const { packageId } = props;
+  console.log(xmlResult);
   const reportElement = xmlResult[0][0].$.type;
   const [favsNames, setFavsNames] = useState(undefined);
   const dispatch = useDispatch();
