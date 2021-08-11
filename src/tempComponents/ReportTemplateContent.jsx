@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 const useStyles = makeStyles({
   report_content: {
     width: "1600px",
-    marginLeft: "00px",
+    marginLeft: "10px",
     marginRight: "0px",
     marginTop: "0px",
     marginBottom: "0px",
@@ -24,10 +24,12 @@ const ReportTemplateContent = (props) => {
   const { reportId } = props;
   const classes = useStyles();
 
+  var components =
+    xmlResult[0].length === undefined ? [xmlResult[0]] : xmlResult[0];
   return (
     xmlResult !== undefined && (
       <div className={classes.report_content}>
-        {xmlResult[0].map((item, index) => {
+        {components.map((item, index) => {
           return item.$.type === "table" ? (
             <ReportTable key={reportId} xmlResult={item} order={index} />
           ) : item.$.type === "text" ? (

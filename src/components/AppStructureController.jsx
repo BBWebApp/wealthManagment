@@ -5,7 +5,10 @@ import { Typography, makeStyles } from "@material-ui/core";
 import Header from "../tempComponents/Header";
 import Drawer from "../tempComponents/Drawer";
 import ContentController from "./ContentController";
-import { useDispatch } from "react-redux";
+import axios from "axios";
+import base from "base-64";
+import { useSelector, useDispatch } from "react-redux";
+import ReactHtmlParser from "react-html-parser";
 import {
   getDownloadedImages,
   GET_DOWNLOADIMAGES,
@@ -14,6 +17,11 @@ const useStyles = makeStyles({});
 
 var parseString = require("xml2js").parseString;
 var stripNS = require("xml2js").processors.stripPrefix;
+
+const TOK = "gui_client:kFjfAh68k$$ADUjPr?vPA";
+const HASH = base.encode(TOK);
+const BASIC = "Basic " + HASH;
+
 const options = {
   tagNameProcessors: [stripNS],
   explicitArray: false,
@@ -28,8 +36,13 @@ const traversePackageTree = (packageExplorer, drawerObj) => {
         drawerObj[packageCateogryReportName] = new Array();
         break;
       case "item":
+        var itemLists =
+          packageExplorer[packageItemsOrCategories].length === undefined
+            ? [packageExplorer[packageItemsOrCategories]]
+            : packageExplorer[packageItemsOrCategories];
+
         drawerObj[packageCateogryReportName].push(
-          packageExplorer[packageItemsOrCategories].$.name
+          itemLists.map((item) => item.$.name)
         );
         break;
       case "category":
@@ -63,11 +76,17 @@ const traverseReportContents = (packageExplorer, contentObj) => {
         contentObj[packageCateogryReportName] = new Array();
         break;
       case "item":
-        var itemName = packageExplorer[packageItemsOrCategories].$.name;
-        contentObj[packageCateogryReportName][itemName] = new Array();
-        contentObj[packageCateogryReportName][itemName].push(
-          packageExplorer[packageItemsOrCategories].component
-        );
+        var itemLists =
+          packageExplorer[packageItemsOrCategories].length === undefined
+            ? [packageExplorer[packageItemsOrCategories]]
+            : packageExplorer[packageItemsOrCategories];
+
+        itemLists.map((item) => {
+          var itemName = item.$.name;
+          contentObj[packageCateogryReportName][itemName] = new Array();
+          contentObj[packageCateogryReportName][itemName].push(item.component);
+        });
+
         break;
       case "category":
         if (Array.isArray(packageExplorer[packageItemsOrCategories])) {
@@ -90,6 +109,10 @@ const traverseReportContents = (packageExplorer, contentObj) => {
     }
   });
 };
+
+const api = axios.create({
+  baseURL: "http://localhost:8012/proxy/",
+});
 const AppStructureController = ({ appXml }) => {
   const [Xml, setXml] = useState();
   const [HeaderStructure, setHeaderStructure] = useState();
@@ -116,6 +139,21 @@ const AppStructureController = ({ appXml }) => {
 
     setContentStructure(ContentObj);
   };
+
+  axios
+    .get("http://localhost:8012/proxy/charts", {
+      headers: {
+        "Content-Type": "text/html",
+      },
+    })
+    .then((response) => {
+      console.log(response.data);
+    });
+
+  var genericLayer = useSelector((state) => {
+    return state.serverCall.htmlGeneric;
+  });
+  console.log(genericLayer);
 
   useEffect(async () => {
     parseString(appXml, options, function (err, result) {

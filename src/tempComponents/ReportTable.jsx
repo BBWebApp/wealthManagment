@@ -5,7 +5,7 @@ import {
   TableContainer,
   TableHead,
   TablePagination,
-  TableRow
+  TableRow,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,7 +30,7 @@ const ReportTable = (props) => {
     return state.tableData.tableData;
     // state.reducer.stateName
   });
-  
+
   const setColumnNames = (columns) => {
     columns !== undefined &&
       columns.forEach((element) => {
@@ -65,8 +65,8 @@ const ReportTable = (props) => {
   };
 
   useEffect(async () => {
-    dispatch(getTableData(xmlResult.data[0].$.link));
-    setColumns(xmlResult.columns[0].columnName);
+    dispatch(getTableData(xmlResult.data.$.link));
+    setColumns(xmlResult.columns.columnName);
   }, []);
 
   columns !== undefined && setColumnNames(columns);

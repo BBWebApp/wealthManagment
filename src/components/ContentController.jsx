@@ -9,7 +9,7 @@ import { useLocation } from "react-router-dom";
 import { withRouter } from "react-router-dom";
 const useStyles = makeStyles({
   content: {
-    marginLeft: "240px",
+    marginLeft: "270px",
     marginTop: "80px",
   },
 });

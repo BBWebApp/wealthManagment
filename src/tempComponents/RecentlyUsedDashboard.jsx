@@ -20,6 +20,7 @@ const useStyles = makeStyles({
     "&:hover": {
       backgroundColor: "#ed9a0d",
     },
+    borderRadius: "8px",
   },
 });
 

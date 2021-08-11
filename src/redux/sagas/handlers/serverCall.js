@@ -1,5 +1,5 @@
 import { call, put } from "redux-saga/effects";
-import { setReportHtml, setXML } from "../../ducks/serverCall";
+import { setReportHtml, setXML, setGenericApp } from "../../ducks/serverCall";
 import { requestServerCall } from "../requests/serverCall";
 
 export function* handleServerCall(action) {
@@ -32,6 +32,11 @@ export function* handleServerCall(action) {
           reportComponents.push(component);
         });
         yield put(setReportHtml(reportComponents, reportId));
+        break;
+      case "GET_GENERIC_APP":
+        var response = yield call(requestServerCall, action);
+        var sampleLayer = response.data;
+        yield put(setGenericApp(sampleLayer));
         break;
       default:
         break;

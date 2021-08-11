@@ -1,33 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <navigation>
     <category name="Defaults">
-        <category name="DZBank">
-            <item name="EOD-internalGoods">
-                <component type="text" />
-                <component type="chart" />
-            </item>
-            <category name="Sales">
-                <item name="internals">
-                    <component type="text" />
-                </item>
-            </category>
-        </category>
-
         <category name="Financials">
-            <item name="eod-outsidersContribution">
+            <item name="eod">
                 <component type="text" />
             </item>
         </category>
-        <item name="here">
+        <item name="BBConsult">
             <component type="text" />
-            <component type="chart" />
+        </item>
+        <item name="consultingApproach">
+            <component type="text" />
         </item>
     </category>
-
-
-    <category name="Soul">
-        <item name="spirit">
+    <category name="BuisnessEvaluations">
+        <item name="greenStartups">
+            <component type="table">
+                <data link="http://0.0.0.0:5002/workflow/2/task/1/node/out/payload/gzip" />
+                <columns>
+                    <columnName name="business_avg" />
+                    <columnName name="business_review_count" />
+                </columns>
+            </component>
             <component type="text" />
         </item>
     </category>
 </navigation>
+

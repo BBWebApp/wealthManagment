@@ -3,6 +3,7 @@ import axios from "axios";
 var dispatch_types_urls = {
   GET_XML: "http://localhost:8085/appxml",
   GET_REPORT_HTML: "http://localhost:8085/reportHtml",
+  GET_GENERIC_APP: "http://localhost:8085/genericApp",
 };
 
 export function requestServerCall(action) {
@@ -17,7 +18,8 @@ export function requestServerCall(action) {
         reportId: reportId,
         packageId: packageId,
       });
-
+    case "GET_GENERIC_APP":
+      return axios.post(dispatch_types_urls["GET_GENERIC_APP"]);
     default:
       break;
   }

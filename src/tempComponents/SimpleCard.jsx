@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
   media: {
     height: 250,
-    paddingTop: "0.25%", // 16:9
+    paddingTop: "2.25%", // 16:9
   },
   expand: {
     transform: "rotate(0deg)",

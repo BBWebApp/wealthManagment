@@ -14,7 +14,7 @@ import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
-const drawerWidth = 240;
+const drawerWidth = 280;
 const Styles = makeStyles((theme) => ({
   root: {
     "&:hover": {
@@ -47,7 +47,7 @@ const Drawer = (props) => {
   const { history } = props;
   const [favsNames, setFavsNames] = useState(undefined);
   const { drawer } = props;
-
+  const [openedPackageTree, setOpenedPackageTree] = useState([]);
   var screenShots = useSelector((state) => state.downloadImage.favs); // state.reducer.stateName
   var favReportsNames = [];
 
@@ -60,17 +60,11 @@ const Drawer = (props) => {
       setFavsNames(favReportsNames);
     }
   }, [screenShots]);
-  const [openedPackageTree, setOpenedPackageTree] = useState([]);
 
   const arraysEqual = (a, b) => {
     if (a === b) return true;
     if (a == null || b == null) return false;
     if (a.length !== b.length) return false;
-
-    // If you don't care about the order of the elements inside
-    // the array, you should sort both arrays here.
-    // Please note that calling sort on an array will modify that array.
-    // you might want to clone your array first.
 
     for (var i = 0; i < a.length; i++) {
       if (a[i] !== b[i]) return false;
@@ -96,11 +90,25 @@ const Drawer = (props) => {
     }
   };
 
-  const getDrawerView = (categoryObject, parentKey) => {
+  const itemUrl = (parentKey, packageOfItem, item) => {
+    const parentPckIndex = openedPackageTree.indexOf(parentKey);
+    const packageUrl =
+      parentPckIndex === undefined || parentKey === undefined
+        ? openedPackageTree[0]
+        : parentKey.split("-.-").join("/") + "/" + packageOfItem;
+
+    return "/" + packageUrl + "/" + item;
+  };
+  const drawerPackageTree = (categoryObject, parentKey, nestedLevel) => {
     return Object.keys(categoryObject).map((key, index) => (
       <>
         <ListItem
           className={classes.root}
+          style={
+            parentKey !== undefined
+              ? { paddingLeft: `${nestedLevel * 32}px` }
+              : undefined
+          }
           button
           onClick={
             parentKey !== undefined
@@ -108,9 +116,6 @@ const Drawer = (props) => {
               : () => handleClick(key, key)
           }
         >
-          <ListItemIcon>
-            <InboxIcon />
-          </ListItemIcon>
           <ListItemText primary={key} />
           {openedPackageTree === key ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
@@ -119,27 +124,32 @@ const Drawer = (props) => {
           timeout="auto"
           unmountOnExit
         >
-          <List component="div" disablePadding>
+          <>
             {Object.keys(categoryObject[key]).map((categoryOrItem) => {
               if (categoryOrItem === "0") {
-                return categoryObject[key].map((item) => {
-                  return (
-                    <ListItem
-                      button
-                      className={classes.nested}
-                      onClick={() => history.push(`/Defaults/${key}/` + item)}
-                      key={item}
-                    >
-                      <ListItemIcon>
-                        {favsNames && favsNames.includes(item) ? (
-                          <StarIcon style={{ color: "#ed9a0d" }} />
-                        ) : (
-                          <StarBorder />
-                        )}
-                      </ListItemIcon>
-                      <ListItemText primary={item} />
-                    </ListItem>
-                  );
+                return categoryObject[key].map((items) => {
+                  return items.map((item) => {
+                    return (
+                      <ListItem
+                        button
+                        className={classes.root}
+                        style={{ paddingLeft: `${(nestedLevel + 1) * 32}px` }}
+                        onClick={() =>
+                          history.push(itemUrl(parentKey, key, item))
+                        }
+                        key={item}
+                      >
+                        <ListItemIcon>
+                          {favsNames && favsNames.includes(item) ? (
+                            <StarIcon style={{ color: "#ed9a0d" }} />
+                          ) : (
+                            <StarBorder />
+                          )}
+                        </ListItemIcon>
+                        <ListItemText primary={item} />
+                      </ListItem>
+                    );
+                  });
                 });
               } else {
                 var newCategory = {};
@@ -147,13 +157,17 @@ const Drawer = (props) => {
                 newCategory[categoryOrItem] =
                   categoryObject[key][categoryOrItem];
                 if (parentKey === undefined)
-                  return getDrawerView(newCategory, key);
+                  return drawerPackageTree(newCategory, key, nestedLevel + 1);
                 else {
-                  return getDrawerView(newCategory, parentKey + "-.-" + key);
+                  return drawerPackageTree(
+                    newCategory,
+                    parentKey + "-.-" + key,
+                    nestedLevel + 1
+                  );
                 }
               }
             })}
-          </List>
+          </>
         </Collapse>
       </>
     ));
@@ -174,9 +188,6 @@ const Drawer = (props) => {
           button
           onClick={() => history.push(`/home`)}
         >
-          <ListItemIcon>
-            <InboxIcon />
-          </ListItemIcon>
           <ListItemText primary={"Home"} />
         </ListItem>
         <Divider
@@ -185,7 +196,7 @@ const Drawer = (props) => {
           style={{ marginBottom: "3px", marginTop: "3px" }}
         />
 
-        {getDrawerView(drawer)}
+        {drawerPackageTree(drawer, undefined, 0)}
       </List>
     </WMDrawer>
   ) : (

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter } from "react-router-dom";
 import AppStructureController from "./components/AppStructureController";
 import { useSelector, useDispatch } from "react-redux";
-import { getXML } from "./redux/ducks/serverCall";
+import { getXML, getGenericApp } from "./redux/ducks/serverCall";
 
 /* 
 lcp --proxyUrl http://192.168.178.36:5002 --port 8011
@@ -13,6 +13,9 @@ function App() {
 
   useEffect(() => {
     dispatch(getXML());
+  }, []);
+  useEffect(() => {
+    dispatch(getGenericApp());
   }, []);
 
   var Xml = useSelector((state) => {

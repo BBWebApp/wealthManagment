@@ -7,10 +7,15 @@ import {
   getDownloadedImages,
   GET_DOWNLOADIMAGES,
 } from "../redux/ducks/downloadImage";
-const useStyles = makeStyles({});
+const useStyles = makeStyles({
+  content: {
+    marginLeft: "10px",
+  },
+});
 
 const Welcome = () => {
   const dispatch = useDispatch();
+  const classes = useStyles();
 
   useEffect(() => {
     dispatch(getDownloadedImages(true));
@@ -18,7 +23,7 @@ const Welcome = () => {
     dispatch(getDownloadedImages());
   }, []);
   return (
-    <div>
+    <div className={classes.content}>
       <RecentlyUsedDashboard />
       <br />
       <br />

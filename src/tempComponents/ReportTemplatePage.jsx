@@ -1,5 +1,4 @@
 import { Grid, IconButton, makeStyles } from "@material-ui/core";
-import FavoriteIcon from "@material-ui/icons/Favorite";
 import React, { createRef, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useScreenshot } from "use-react-screenshot";
@@ -9,6 +8,8 @@ import { uploadImage } from "../redux/ducks/uploadImage";
 import ReportTemplateContent from "./ReportTemplateContent";
 import ReportTemplateFooter from "./ReportTemplateFooter";
 import ReportTemplateHeader from "./ReportTemplateHeader";
+import StarBorder from "@material-ui/icons/StarBorder";
+import StarIcon from "@material-ui/icons/Star";
 
 const useStyles = makeStyles({});
 
@@ -16,8 +17,10 @@ const ReportTemplatePage = (props) => {
   const { xmlResult } = props;
   const { reportId } = props;
   const { packageId } = props;
-  console.log(xmlResult);
-  const reportElement = xmlResult[0][0].$.type;
+  const reportElement =
+    xmlResult[0].length === undefined
+      ? xmlResult[0].$.type
+      : xmlResult[0][0].$.type;
   const [favsNames, setFavsNames] = useState(undefined);
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -86,9 +89,9 @@ const ReportTemplatePage = (props) => {
           onClick={favouriteClicked}
         >
           {favsNames !== undefined && favsNames.includes(reportId) ? (
-            <FavoriteIcon style={{ color: "#ed9a0d" }} />
+            <StarIcon style={{ color: "#ed9a0d" }} />
           ) : (
-            <FavoriteIcon />
+            <StarBorder />
           )}
         </IconButton>
         <div ref={ref}>
