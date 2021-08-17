@@ -110,9 +110,6 @@ const traverseReportContents = (packageExplorer, contentObj) => {
   });
 };
 
-const api = axios.create({
-  baseURL: "http://localhost:8012/proxy/",
-});
 const AppStructureController = ({ appXml }) => {
   const [Xml, setXml] = useState();
   const [HeaderStructure, setHeaderStructure] = useState();
@@ -122,7 +119,6 @@ const AppStructureController = ({ appXml }) => {
 
   var drawerObj = {};
   var ContentObj = {};
-
   const parseHeader = (Xml) => {};
   const parseDrawer = (Xml) => {
     Xml["navigation"]["category"].map((single) => {
@@ -140,22 +136,8 @@ const AppStructureController = ({ appXml }) => {
     setContentStructure(ContentObj);
   };
 
-  axios
-    .get("http://localhost:8012/proxy/charts", {
-      headers: {
-        "Content-Type": "text/html",
-      },
-    })
-    .then((response) => {
-      console.log(response.data);
-    });
-
-  var genericLayer = useSelector((state) => {
-    return state.serverCall.htmlGeneric;
-  });
-  console.log(genericLayer);
-
   useEffect(async () => {
+    
     parseString(appXml, options, function (err, result) {
       Xml === undefined && setXml(result);
     });

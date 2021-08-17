@@ -14,13 +14,12 @@ function App() {
   useEffect(() => {
     dispatch(getXML());
   }, []);
-  useEffect(() => {
-    dispatch(getGenericApp());
-  }, []);
 
   var Xml = useSelector((state) => {
     return state.serverCall.xml;
   });
+
+  console.log(Xml);
   return Xml ? (
     <BrowserRouter>
       {/* {isAuthenticated === false && <LoginButton />} */}
