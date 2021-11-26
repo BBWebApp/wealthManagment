@@ -16,7 +16,7 @@
     <category name="BuisnessEvaluations">
         <item name="greenStartups">
             <component type="table">
-                <data link="http://0.0.0.0:5002/workflow/2/task/1/node/out/payload/gzip" />
+                <data link="http://192.168.178.86:5002/workflow/2/task/1/node/out/payload/gzip" />
                 <columns>
                     <columnName name="business_avg" />
                     <columnName name="business_review_count" />

@@ -1,7 +1,8 @@
 import axios from "axios";
+import * as myConstClass from "../../../global";
 
 var dispatch_types_urls = {
-  GET_TABLE_DATA: "http://localhost:8085/getTableData",
+  GET_TABLE_DATA: `http://${myConstClass.LOCAL_IP_ADDRESS}:${myConstClass.EXPRESS_PORT}/getTableData`,
 };
 
 export function requestTableData(action) {

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<navigation>
+	<categories>
+		<category name="Defaults">
+			<categories>
+				<category name="Financials">
+					<items>
+						<item name="eod">
+							<component type="text" />
+						</item>
+					</items>
+				</category>
+			</categories>
+			<items>
+				<item name="consultingApproach">
+					<component type="text" />
+				</item>
+				<item name="BBConsult">
+					<component type="text">
+						<reportComponentPath
+							link="http://0.0.0.0:5002/fileserver/file/public/components/Defaults/BBConsult" />
+					</component>
+				</item>
+				<item name="tableView">
+					<component type="table">
+						<data
+							link="http://0.0.0.0:5002/workflow/6/task/1/node/out/payload/gzip" />
+						<columns>
+							<column name="index" />
+							<column name="Muhammed MacIntyre" />
+						</columns>
+						<reportComponentPath
+							link="http://0.0.0.0:5002/fileserver/file/public/components/Defaults/tableView" />
+					</component>
+				</item>
+			</items>
+		</category>
+		<category name="BuisnessEvaluations">
+			<items>
+				<item name="greenStartups">
+					<component type="table">
+						<data
+							link="http://0.0.0.0:5002/workflow/2/task/1/node/out/payload/gzip" />
+						<columns>
+							<column name="business_avg" />
+							<column name="business_review_count" />
+						</columns>
+					</component>
+					<component type="text" />
+				</item>
+			</items>
+		</category>
+		<category name="Manager">
+			<categories>
+				<category name="Specifics">
+					<categories>
+						<category name="upToDate">
+							<items>
+								<item name="recentlyYesterday">
+									<component type="text" />
+									<component type="table">
+										<data
+											link="http://0.0.0.0:5002/workflow/6/task/1/node/out/payload/gzip" />
+										<columns>
+											<column name="Eldon Base for stackable storage shelf" />
+											<column name="platinum" />
+											<column name="Muhammed MacIntyre" />
+											<column name="Nunavut" />
+										</columns>
+									</component>
+								</item>
+							</items>
+						</category>
+					</categories>
+				</category>
+			</categories>
+		</category>
+	</categories>
+</navigation>

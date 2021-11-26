@@ -1,7 +1,7 @@
 import axios from "axios";
-
+import * as myConstClass from "../../../global";
 var dispatch_types_urls = {
-  GET_SLICEDIMAGE: "http://localhost:8085/sliceImage",
+  GET_SLICEDIMAGE: `http://${myConstClass.LOCAL_IP_ADDRESS}:${myConstClass.EXPRESS_PORT}/sliceImage`,
 };
 
 export function requestCropImage(action) {

@@ -3,6 +3,7 @@ import { setTableData } from "../../ducks/tableData";
 import { requestTableData } from "../requests/tableData";
 
 export function* handleTableData(action) {
+  
   var dispatch_type = action["type"];
   try {
     switch (dispatch_type) {

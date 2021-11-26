@@ -1,9 +1,9 @@
 import axios from "axios";
+import * as myConstClass from "../../../global";
 
 var dispatch_types_urls = {
-  GET_XML: "http://localhost:8085/appxml",
-  GET_REPORT_HTML: "http://localhost:8085/reportHtml",
-  GET_GENERIC_APP: "http://localhost:8085/genericApp",
+  GET_XML: `http://${myConstClass.LOCAL_IP_ADDRESS}:${myConstClass.EXPRESS_PORT}/appxml`,
+  GET_REPORT_HTML: `http://${myConstClass.LOCAL_IP_ADDRESS}:${myConstClass.EXPRESS_PORT}/reportHtml`,
 };
 
 export function requestServerCall(action) {
