@@ -145,7 +145,6 @@ const AppStructureController = ({ appXml }) => {
     Xml !== undefined && parseDrawer(Xml);
     Xml !== undefined && parseContent(Xml);
   }, [Xml]);
-
   return Xml !== undefined && ContentStructure !== undefined ? (
     <React.Fragment>
       <Header header={HeaderStructure} />
