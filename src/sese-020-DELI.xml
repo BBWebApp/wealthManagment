@@ -1,0 +1,82 @@
+<SctiesTxCxlReq>
+    <AcctOwnrTxId>
+        <SctiesSttlmTxId>
+            <TxId>MT(M, :16R:GENL;:16R:LINK;:20C::PREV)</TxId>
+            <SctiesMvmntTp>DELI</SctiesMvmntTp>
+            <Pmt>FREE</Pmt>
+
+        </SctiesSttlmTxId>
+    </AcctOwnrTxId>
+    <SfkpgAcct>
+        <Id>MT(M, :16R:FIAC;:97A::SAFE)</Id>
+    </SfkpgAcct>
+    <TxDtls>
+        <FinInstrmId>
+            <ISIN>MT(M, :16R:TRADDET;:35B:ISIN)</ISIN>
+        </FinInstrmId>
+        <TradDt>
+            <Dt>
+                <Dt>MT(M, :16R:TRADDET;:98A::TRAD)</Dt>
+            </Dt>
+        </TradDt>
+        <SttlmDt>
+            <Dt>
+                <Dt>MT(M, :16R:TRADDET;:98A::SETT)</Dt>
+            </Dt>
+        </SttlmDt>
+        <SttlmQty>
+            <Qty>
+                <FaceAmt>MT(M, :16R:FIAC;:36B::SETT//FAMT)</FaceAmt>
+            </Qty>
+        </SttlmQty>
+        <DlvrgSttlmPties>
+            <Dpstry>
+                <Id>
+                    <AnyBIC>MT(M, :16R:SETDET;:16R:SETPRTY;:95P::PSET)</AnyBIC>
+                </Id>
+                <SfkpgAcct>
+                    <Id>MT(O, :16R:SETDET;:16R:SETPRTY;:95P::PSET;:97A::SAFE)</Id>
+                </SfkpgAcct>
+            </Dpstry>
+            <Pty1>
+                <Id>
+                    <AnyBIC>MT(M, 16R:FIAC;:94B::SAFE//SHHE)</AnyBIC>
+                </Id>
+            </Pty1>
+            <Pty2>
+                <Id>
+                    <AnyBIC>MT(M, :16R:SETDET;:16R:SETPRTY;:95P::REAG)</AnyBIC>
+                </Id>
+                <SfkpgAcct>
+                    <Id>MT(O, :16R:SETDET;:16R:SETPRTY;:95P::REAG;:97A::SAFE)</Id>
+                </SfkpgAcct>
+            </Pty2>
+        </DlvrgSttlmPties>
+        <RcvgSttlmPties>
+            <Dpstry>
+                <Id>
+                    <AnyBIC>MT(M, :16R:SETDET;:16R:SETPRTY;:95P::RECU)</AnyBIC>
+                </Id>
+                <SfkpgAcct>
+                    <Id>MT(O, :16R:SETDET;:16R:SETPRTY;:95P::RECU;:97A::SAFE)</Id>
+                </SfkpgAcct>
+            </Dpstry>
+            <Pty1>
+                <Id>
+                    <AnyBIC>MT(M, :16R:SETDET;:16R:SETPRTY;:95P::BUYR)</AnyBIC>
+                </Id>
+                <SfkpgAcct>
+                    <Id>MT(O, :16R:SETDET;:16R:SETPRTY;:95P::BUYR;:97A::SAFE)</Id>
+                </SfkpgAcct>
+            </Pty1>
+            <Pty2>
+                <Id>
+                    <AnyBIC>MT(M, :16R:SETDET;:16R:SETPRTY;:95P::REAG)</AnyBIC>
+                </Id>
+                <SfkpgAcct>
+                    <Id>MT(O, :16R:SETDET;:16R:SETPRTY;:95P::REAG;:97A::SAFE)</Id>
+                </SfkpgAcct>
+            </Pty2>
+        </RcvgSttlmPties>
+    </TxDtls>
+</SctiesTxCxlReq>

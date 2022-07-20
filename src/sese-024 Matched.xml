@@ -1,0 +1,16 @@
+<SctiesSttlmTxStsAdvc>
+    <TxId>
+        <AcctOwnrTxId>
+
+        </AcctOwnrTxId>
+        <MktInfrastrctrTxId>
+
+        </MktInfrastrctrTxId>
+        <AcctSvcrTxId>
+
+        </AcctSvcrTxId>
+    </TxId>
+    <MtchgSts>
+        <Mtchd></Mtchd>
+    </MtchgSts>
+</SctiesSttlmTxStsAdvc>
